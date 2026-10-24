@@ -72,12 +72,37 @@
 
   /* ---------- contact form -> email ---------- */
   const form = document.querySelector("[data-enquiry]");
-  if (form) form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const f = new FormData(form);
-    const body = `Name: ${f.get("name")}\nCompany: ${f.get("company") || "-"}\nPhone: ${f.get("phone") || "-"}\n\n${f.get("message")}`;
-    window.location.href = `mailto:urbanskylk@gmail.com?subject=${encodeURIComponent("Website enquiry - " + f.get("name"))}&body=${encodeURIComponent(body)}`;
-  });
+  if (form) {
+    const messages = { name: "Please enter your name.", message: "Please tell us how we can help." };
+    // validate on blur, not on every keystroke; error text sits under the field
+    const check = (input) => {
+      const field = input.closest(".field");
+      const err = field && field.querySelector(".field__error");
+      const bad = input.required && !input.value.trim();
+      if (field) field.classList.toggle("is-invalid", bad);
+      input.setAttribute("aria-invalid", bad ? "true" : "false");
+      if (err) err.textContent = bad ? messages[input.name] || "This field is required." : "";
+      return !bad;
+    };
+    form.querySelectorAll("[required]").forEach((input) => {
+      input.addEventListener("blur", () => check(input));
+      input.addEventListener("input", () => { if (input.closest(".field").classList.contains("is-invalid")) check(input); });
+    });
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const invalid = [...form.querySelectorAll("[required]")].filter((input) => !check(input));
+      const status = form.querySelector(".form__status");
+      if (invalid.length) {
+        invalid[0].focus();
+        if (status) status.textContent = "";
+        return;
+      }
+      const f = new FormData(form);
+      const body = `Name: ${f.get("name")}\nCompany: ${f.get("company") || "-"}\nPhone: ${f.get("phone") || "-"}\n\n${f.get("message")}`;
+      if (status) status.textContent = "Opening your email app with your enquiry. Press send there to reach us.";
+      window.location.href = `mailto:urbanskylk@gmail.com?subject=${encodeURIComponent("Website enquiry - " + f.get("name"))}&body=${encodeURIComponent(body)}`;
+    });
+  }
 
   /* ---------- page intro + scroll animations ---------- */
   function splitChars(el) {
