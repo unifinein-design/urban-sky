@@ -47,6 +47,12 @@
     }
   }
 
+  /* ---------- back to top ---------- */
+  document.querySelectorAll("[data-top]").forEach((b) => b.addEventListener("click", () => {
+    if (lenis) lenis.scrollTo(0, { duration: 1.6 });
+    else window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+  }));
+
   /* ---------- cursor glow ---------- */
   const cursor = document.querySelector(".cursor");
   if (cursor && hasGsap && !reduce) {
