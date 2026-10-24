@@ -238,19 +238,6 @@ body::after {
   position: sticky; top: 0; height: 100vh; height: 100svh; min-height: 620px; overflow: hidden;
   display: grid; grid-template-columns: 1fr 1fr; align-items: center;
 }
-.hero__bg {
-  position: absolute; inset: -6%;
-  background: url("../img/pour-bg.jpg") center/cover no-repeat;
-  filter: brightness(0.38) saturate(1.1) blur(2px);
-  transform: scale(1.08);
-}
-.hero__bg::after {
-  content: ""; position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse at 70% 60%, rgba(200, 116, 28, 0.18), transparent 55%),
-    radial-gradient(ellipse at center, transparent 30%, rgba(10, 8, 6, 0.9) 85%),
-    linear-gradient(to bottom, rgba(10, 8, 6, 0.5), transparent 30%, transparent 70%, var(--ink));
-}
 .hero__dust { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .hero__copy { position: relative; z-index: 3; padding-left: max(var(--gutter), calc((100vw - var(--max)) / 2)); padding-right: 24px; }
 .hero__welcome { font-family: var(--serif); font-style: italic; font-size: clamp(24px, 2.4vw, 34px); color: var(--gold-2); margin: 0 0 6px; }
@@ -259,20 +246,30 @@ body::after {
 .hero__sub { margin: 18px 0 0; font-family: var(--sans); font-weight: 400; letter-spacing: 0.55em; font-size: clamp(11px, 1.05vw, 15px); color: #d8ccb6; text-transform: uppercase; }
 .hero__rule { width: 120px; height: 1px; background: linear-gradient(90deg, var(--gold), transparent); margin: 34px 0 26px; transform-origin: left; }
 .hero__tag { font-family: var(--serif); font-size: clamp(21px, 2vw, 28px); line-height: 1.4; margin: 0 0 38px; color: #efe5d2; max-width: 30ch; }
-.hero__scene { position: relative; z-index: 2; height: 100%; display: grid; place-items: center; }
-.hero__scene svg { width: min(100%, 760px); height: auto; max-height: 96vh; overflow: visible; }
-/* 3D scene: full-bleed canvas, copy sits over a soft left-hand shade */
-.has-3d .hero__scene { position: absolute; inset: 0; z-index: 1; }
-.has-3d .hero__scene svg { display: none; }
-.hero__gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.has-3d .hero__dust { z-index: 2; }
-.has-3d .hero__stage::after {
+/* pour film: full-bleed canvas, copy sits over a soft left-hand shade */
+.hero__scene { position: absolute; inset: 0; z-index: 1; display: block; height: auto; }
+.hero__film { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+/* cinematic finish over the film: vignette and a warm low glow */
+.hero__scene::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 45% 40% at 70% 78%, rgba(214, 140, 50, 0.14), transparent 70%),
+    radial-gradient(ellipse at 62% 50%, transparent 45%, rgba(6, 5, 4, 0.7) 100%);
+}
+.hero__crest {
+  position: absolute; z-index: 2; width: clamp(64px, 6vw, 92px); height: auto;
+  left: 70%; top: 9%; transform: translateX(-50%);
+  opacity: 0; filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.6));
+}
+.hero__dust { z-index: 2; }
+.hero__stage::after {
   content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
-  background: linear-gradient(90deg, rgba(10, 8, 6, 0.82) 0%, rgba(10, 8, 6, 0.45) 34%, transparent 58%),
-              linear-gradient(to top, var(--ink) 0%, transparent 18%);
+  background: linear-gradient(90deg, rgba(10, 8, 6, 0.85) 0%, rgba(10, 8, 6, 0.4) 32%, transparent 52%),
+              linear-gradient(to top, var(--ink) 0%, transparent 16%);
 }
 @media (max-width: 860px) {
-  .has-3d .hero__stage::after { background: linear-gradient(to bottom, rgba(10, 8, 6, 0.85) 0%, rgba(10, 8, 6, 0.4) 38%, transparent 55%), linear-gradient(to top, var(--ink) 0%, transparent 15%); }
+  .hero__stage::after { background: linear-gradient(to bottom, rgba(10, 8, 6, 0.9) 0%, rgba(10, 8, 6, 0.45) 36%, transparent 52%), linear-gradient(to top, var(--ink) 0%, transparent 14%); }
+  .hero__crest { left: 50%; top: 47%; }
 }
 .hero__scroll {
   position: absolute; z-index: 4; left: 50%; bottom: 28px; transform: translateX(-50%);
@@ -289,8 +286,6 @@ body::after {
   .hero__rule { margin: 22px auto 18px; }
   .hero__tag { margin: 0 auto 0; font-size: 19px; }
   .hero__cta { display: none; }
-  .hero__scene { margin-top: -4vh; }
-  .hero__scene svg { max-height: 58vh; }
 }
 
 /* ===== marquee ===== */
