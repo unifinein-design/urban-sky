@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
   <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
     <div>
@@ -21,7 +22,7 @@
       <p>Are you of legal drinking age in your country?</p>
       <div class="row">
         <button class="btn btn--solid" data-yes>Yes, enter</button>
-        <button class="btn" data-no>No</button>
+        <button class="btn btn--plain" data-no>No</button>
       </div>
       <p class="note">Please enjoy responsibly.</p>
     </div>
@@ -38,11 +39,12 @@
         <li><a href="about.html" aria-current="page">About us</a></li>
         <li><a href="brands.html">Explore Our Brands</a></li>
         <li><a href="contact.html">Contact Us</a></li>
+        <li class="nav__cta"><a class="btn btn--sm" href="contact.html">Enquire</a></li>
       </ul>
     </div>
   </header>
 
-  <main>
+  <main id="main">
     <section class="phero">
       <div class="phero__img" style="background-image:url('assets/img/champagne-wide.jpg')" data-parallax="8"></div>
       <div class="wrap">
@@ -108,7 +110,19 @@
   <footer class="footer">
     <div class="wrap">
       <div class="footer__top">
-        <div class="footer__brand"><img src="assets/img/logo.png" alt=""><p>URBAN SKY<br>HOLDINGS (PVT) LTD</p></div>
+        <div class="footer__brand-wrap">
+          <div class="footer__brand"><img src="assets/img/logo.png" alt=""><p>URBAN SKY<br>HOLDINGS (PVT) LTD</p></div>
+          <p class="footer__tag">Your premier supplier of fine wine and spirits in Sri Lanka.</p>
+        </div>
+        <div>
+          <h5>Explore</h5>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About us</a></li>
+            <li><a href="brands.html">Explore Our Brands</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </div>
         <div>
           <h5>Visit</h5>
           <ul><li>25/2, New Nuge Road,</li><li>Peliyagoda, Sri Lanka.</li></ul>
@@ -121,7 +135,7 @@
           </ul>
         </div>
       </div>
-      <div class="footer__base"><span>&copy; <span data-year>2026</span> Urban Sky Holdings (Pvt) Ltd</span><span>Please enjoy responsibly.</span></div>
+      <div class="footer__base"><span>&copy; <span data-year>2026</span> Urban Sky Holdings (Pvt) Ltd</span><span>Please enjoy responsibly.</span><button class="to-top" type="button" data-top>Back to top <i aria-hidden="true">&uarr;</i></button></div>
     </div>
   </footer>
 
