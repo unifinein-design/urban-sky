@@ -114,6 +114,8 @@
   }
 
   function frame(now) {
+    // the 3D scene took over, so the SVG fallback stops
+    if (document.documentElement.classList.contains("has-3d")) return;
     const time = (now - t0) / 1000;
     if (!reduce && introStart !== null) intro = clamp((now - introStart) / 1600);
 
