@@ -17,7 +17,17 @@
   <a class="skip-link" href="#main">Skip to content</a>
 
   <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
-    <div class="gate__bg" aria-hidden="true"><picture><source type="image/avif" srcset="assets/img/gate-bg.avif"><img width="1920" height="1280" src="assets/img/gate-bg.jpg" alt="" decoding="async" loading="lazy"></picture></div>
+    <div class="gate__scene" aria-hidden="true">
+      <div class="gate__glow"></div>
+      <video class="gate__fire" muted playsinline loop preload="none">
+        <source src="assets/video/fire-480.mp4" type="video/mp4" media="(max-width: 860px)">
+        <source src="assets/video/fire-720.mp4" type="video/mp4">
+      </video>
+      <div class="gate__floor"></div>
+      <div class="gate__product">
+        <picture><source type="image/avif" srcset="assets/img/gate-bottle.avif"><img class="gate__bottle" src="assets/img/gate-bottle.png" width="576" height="1732" alt="" decoding="async" loading="lazy"></picture>
+      </div>
+    </div>
     <canvas class="gate__embers" aria-hidden="true"></canvas>
     <div class="gate__card">
       <picture><source type="image/avif" srcset="assets/img/logo.avif"><img width="214" height="240" src="assets/img/logo.png" alt="Urban Sky crest"></picture>
@@ -61,7 +71,7 @@
         <div class="brands__head">
           <span class="eyebrow reveal">Featured house</span>
           <h2 class="sr-only">Goalong Liquor</h2>
-          <picture><source type="image/avif" srcset="assets/img/goalong-logo.avif"><img width="760" height="531" loading="lazy" decoding="async" class="brands__logo reveal" src="assets/img/goalong-logo.png" alt="Goalong Liquor - Go along for Dreams"></picture>
+          <picture><source type="image/avif" srcset="assets/img/goalong-logo.avif"><img width="760" height="532" loading="lazy" decoding="async" class="brands__logo reveal" src="assets/img/goalong-logo.png" alt="Goalong Liquor - Go along for Dreams"></picture>
         </div>
         <div class="brands__range reveal">
           <picture><source type="image/avif" srcset="assets/img/goalong-range.avif"><img width="1600" height="1048" loading="lazy" decoding="async" src="assets/img/goalong-range.png" alt="The Goalong Liquor range of whisky, gin, cognac and vodka"></picture>
@@ -69,8 +79,8 @@
         </div>
 
         <div class="whisky reveal">
-          <div class="whisky__flag"><picture><source type="image/avif" srcset="assets/img/goalong-banner.avif"><img width="380" height="325" loading="lazy" decoding="async" src="assets/img/goalong-banner.png" alt="Goalong Liquor"></picture></div>
-          <div class="whisky__img"><picture><source type="image/avif" srcset="assets/img/whisky-banner.avif"><img width="1600" height="525" loading="lazy" decoding="async" src="assets/img/whisky-banner.jpg" alt="Royal Carlston whisky - poured over ice"></picture></div>
+          <div class="whisky__flag"><picture><source type="image/avif" srcset="assets/img/goalong-banner.avif"><img width="380" height="326" loading="lazy" decoding="async" src="assets/img/goalong-banner.png" alt="Goalong Liquor"></picture></div>
+          <div class="whisky__img"><picture><source type="image/avif" srcset="assets/img/whisky-banner.avif"><img width="1600" height="526" loading="lazy" decoding="async" src="assets/img/whisky-banner.jpg" alt="Royal Carlston whisky - poured over ice"></picture></div>
         </div>
 
         <div class="bottles" data-stagger>
@@ -80,7 +90,7 @@
             <span>Blended whisky</span>
           </article>
           <article class="bottle">
-            <picture><source type="image/avif" srcset="assets/img/bottle-goalong-special.avif"><img width="377" height="560" src="assets/img/bottle-goalong-special.png" alt="Goalong Special bottle" loading="lazy"></picture>
+            <picture><source type="image/avif" srcset="assets/img/bottle-goalong-special.avif"><img width="378" height="560" src="assets/img/bottle-goalong-special.png" alt="Goalong Special bottle" loading="lazy"></picture>
             <h3>Goalong Special</h3>
             <span>Small batch whisky</span>
           </article>
@@ -106,7 +116,7 @@
     <section class="band">
       <div class="band__img" style="background-image:url('assets/img/cognac-cigar.jpg');background-image:image-set(url('assets/img/cognac-cigar.avif') type('image/avif'), url('assets/img/cognac-cigar.jpg') type('image/jpeg'))" data-parallax="10"></div>
       <div class="band__inner">
-        <picture><source type="image/avif" srcset="assets/img/crest-mono.avif"><img width="393" height="440" loading="lazy" decoding="async" class="band__crest reveal" src="assets/img/crest-mono.png" alt=""></picture>
+        <picture><source type="image/avif" srcset="assets/img/crest-mono.avif"><img width="394" height="440" loading="lazy" decoding="async" class="band__crest reveal" src="assets/img/crest-mono.png" alt=""></picture>
         <p class="band__quote reveal">Go along for <span class="gold-text">dreams.</span></p>
       </div>
     </section>

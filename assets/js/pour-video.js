@@ -35,4 +35,10 @@
   // first visits wait for the age gate so the pour starts in view; returning visitors start straight away
   window.addEventListener("pour:intro", play);
   if (window.__usStarted) play();
+  // while the gate is up, buffer the pour once the gate's own fire is playing, so the two don't compete
+  window.addEventListener("gate:ready", () => {
+    if (started || video.readyState > 2) return;
+    video.preload = "auto";
+    video.load();
+  }, { once: true });
 })();
