@@ -7,8 +7,9 @@
 
   /* ---------- age gate ---------- */
   const gate = document.getElementById("gate");
-  let verified = false;
-  try { verified = localStorage.getItem("us-age-ok") === "1"; } catch (e) {}
+  // the inline head script decides whether the check is skipped (only between pages of this site, same tab)
+  const verified = root.classList.contains("age-ok");
+  try { localStorage.removeItem("us-age-ok"); } catch (e) {} // older builds remembered the answer forever
   // live flames behind the bottle: only fetched and played while the gate is on screen
   const fire = gate && gate.querySelector(".gate__fire");
   function startFire() {
@@ -34,7 +35,7 @@
     if (verified) { gate.hidden = true; stopFire(); }
     else startFire();
     gate.querySelector("[data-yes]").addEventListener("click", () => {
-      try { localStorage.setItem("us-age-ok", "1"); } catch (e) {}
+      try { sessionStorage.setItem("us-age-ok", "1"); } catch (e) {}
       if (hasGsap && !reduce) {
         gsap.to(gate, { opacity: 0, duration: 0.8, ease: "power2.inOut", onComplete: closeGate });
       } else closeGate();

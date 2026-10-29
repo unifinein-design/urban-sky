@@ -1,0 +1,4 @@
+# Plain static site: no build step, publish the repository root.
+# Kept in the repo so a dashboard setting can't point Netlify at the wrong folder.
+[build]
+  publish = "."

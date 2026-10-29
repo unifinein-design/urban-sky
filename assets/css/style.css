@@ -148,43 +148,37 @@ picture { display: contents; }
 .btn--sm { min-height: 44px; padding: 0 20px; font-size: 12px; letter-spacing: 0.24em; gap: 10px; }
 .btn--sm::after { width: 14px; }
 
-/* ===== age gate: the real bottle in front of live flames, embers rising, card centred ===== */
+/* ===== age gate: soft firelight and embers, the Urban Sky bottle rising out of a centred card ===== */
 .gate {
-  --horizon: 80%;                                       /* where the floor meets the flames */
-  --bh: min(74vh, calc((50vw - 330px) / 0.333));        /* bottle height that keeps it clear of the centred card */
+  --horizon: 80%;                          /* where the floor meets the flames */
+  --gb: clamp(240px, 46vh, 450px);         /* bottle height */
+  --rise: 0.3;                             /* share of the bottle standing above the card's top edge */
   position: fixed; inset: 0; z-index: 200; overflow: hidden;
   display: grid; place-items: center; padding: 24px;
   background: radial-gradient(ellipse 90% 70% at 50% 78%, #2a0d05 0%, #0d0503 55%, #040302 100%);
   text-align: center;
 }
 .gate[hidden], .age-ok .gate { display: none; }
-.gate__scene {
-  position: absolute; inset: 0; transform-origin: 28% 78%;
-  animation: gate-push 30s ease-in-out infinite alternate; will-change: transform;
-}
-@keyframes gate-push { from { transform: scale(1.02); } to { transform: scale(1.08); } }
-/* heat bloom behind the bottle, breathing like a real fire */
+.gate__scene { position: absolute; inset: 0; }
+/* a slow, gentle breath of heat, kept subtle on purpose */
 .gate__glow {
   position: absolute; inset: 0;
   background:
-    radial-gradient(ellipse 34% 46% at 27% 72%, rgba(255, 112, 32, 0.34), transparent 70%),
-    radial-gradient(ellipse 70% 38% at 52% 84%, rgba(214, 66, 18, 0.24), transparent 72%);
-  animation: gate-flicker 2.8s ease-in-out infinite;
+    radial-gradient(ellipse 40% 42% at 50% 58%, rgba(255, 112, 32, 0.2), transparent 70%),
+    radial-gradient(ellipse 80% 36% at 50% 86%, rgba(214, 66, 18, 0.22), transparent 72%);
+  animation: gate-breathe 6s ease-in-out infinite;
 }
-@keyframes gate-flicker {
-  0%, 100% { opacity: 0.84; } 14% { opacity: 1; } 29% { opacity: 0.76; } 43% { opacity: 0.96; }
-  58% { opacity: 0.8; } 71% { opacity: 1; } 86% { opacity: 0.87; }
-}
-/* real flames: screen blending drops the black, so only the fire shows; they rise from behind the floor's edge */
+@keyframes gate-breathe { 0%, 100% { opacity: 0.86; } 50% { opacity: 1; } }
+/* soft, out-of-focus flames: screen blending drops the black, so only the glow of the fire shows */
 .gate__fire {
   position: absolute; left: -16%; width: 132%; height: 96vh;
   bottom: calc(100% - var(--horizon) - 6%);
   object-fit: cover; object-position: 40% 100%;
-  mix-blend-mode: screen; opacity: 0; transition: opacity 1.8s var(--ease);
+  mix-blend-mode: screen; opacity: 0; transition: opacity 2.4s var(--ease);
   -webkit-mask-image: linear-gradient(to top, #000 0%, #000 58%, transparent 96%);
           mask-image: linear-gradient(to top, #000 0%, #000 58%, transparent 96%);
 }
-.gate.fire-on .gate__fire { opacity: 1; }
+.gate.fire-on .gate__fire { opacity: 0.9; }
 /* the dark glossy floor, with firelight pooling on it */
 .gate__floor {
   position: absolute; left: 0; right: 0; top: var(--horizon); bottom: 0;
@@ -192,27 +186,12 @@ picture { display: contents; }
 }
 .gate__floor::before {
   content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 168, 90, 0.4) 28%, rgba(255, 140, 60, 0.26) 64%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 168, 90, 0.34) 30%, rgba(255, 140, 60, 0.24) 70%, transparent);
 }
 .gate__floor::after {
   content: ""; position: absolute; inset: 0;
-  background: radial-gradient(ellipse 46% 70% at 30% 0%, rgba(255, 120, 40, 0.3), transparent 72%);
-  animation: gate-flicker 2.8s ease-in-out infinite reverse;
-}
-/* the bottle stands on the floor, a little in front of the flames */
-.gate__product {
-  position: absolute; height: var(--bh); aspect-ratio: 576 / 1732;
-  left: calc((50vw - 250px) / 2); top: calc(var(--horizon) + 5vh - var(--bh));
-  transform: translateX(-50%);
-}
-.gate__bottle {
-  display: block; width: 100%; height: 100%;
-  filter: drop-shadow(0 0 18px rgba(255, 112, 40, 0.16)) drop-shadow(0 24px 26px rgba(0, 0, 0, 0.75));
-  -webkit-box-reflect: below 1px linear-gradient(transparent 74%, rgba(255, 255, 255, 0.13));
-}
-.gate__product::after {
-  content: ""; position: absolute; z-index: -1; left: 6%; right: 6%; bottom: -1.6%; height: 4%;
-  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.9), transparent 70%);
+  background: radial-gradient(ellipse 60% 70% at 50% 0%, rgba(255, 120, 40, 0.24), transparent 72%);
+  animation: gate-breathe 6s ease-in-out infinite reverse;
 }
 /* vignette, and darkness above the flames so the card reads clearly */
 .gate__scene::after {
@@ -222,43 +201,56 @@ picture { display: contents; }
     radial-gradient(ellipse at 50% 58%, transparent 50%, rgba(0, 0, 0, 0.66) 100%);
 }
 .gate__embers { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-/* frosted-glass card, centred over the scene */
+/* frosted-glass card, centred; its top margin keeps bottle and card centred together */
 .gate__card {
-  position: relative; z-index: 2; width: min(500px, 100%);
-  padding: clamp(36px, 4.5vw, 56px) clamp(24px, 4vw, 48px);
+  position: relative; z-index: 2; width: min(480px, 100%);
+  margin-top: calc(var(--gb) * var(--rise));
+  padding: 0 clamp(24px, 4vw, 44px) clamp(30px, 4vw, 44px);
   border: 1px solid rgba(233, 210, 155, 0.26);
   background: linear-gradient(180deg, rgba(24, 16, 11, 0.56), rgba(8, 6, 5, 0.7));
   backdrop-filter: blur(10px) saturate(1.15); -webkit-backdrop-filter: blur(10px) saturate(1.15);
   box-shadow: 0 40px 120px -30px rgba(0, 0, 0, 0.95), inset 0 1px 0 rgba(233, 210, 155, 0.16);
 }
 .gate__card::before { content: ""; position: absolute; inset: 10px; border: 1px solid rgba(233, 210, 155, 0.08); pointer-events: none; }
-.gate__card img { width: 110px; margin: 0 auto 28px; filter: drop-shadow(0 10px 40px rgba(201, 164, 92, 0.35)); }
-.gate h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(28px, 2.7vw, 38px); line-height: 1.15; margin: 0 0 12px; text-wrap: balance; }
-.gate p { color: var(--muted); margin: 0 0 32px; }
-.gate .row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
-.gate .note { margin-top: 26px; font-size: 13px; color: #7d715f; }
-/* narrow and portrait screens: the bottle stands centred behind the frosted card */
-@media (max-width: 899px), (max-aspect-ratio: 1/1) {
-  .gate { --horizon: 87%; --bh: min(58vh, calc(60vw / 0.333)); }
-  .gate__product { left: 50%; top: calc(var(--horizon) + 3vh - var(--bh)); }
-  .gate__glow {
-    background:
-      radial-gradient(ellipse 60% 40% at 50% 74%, rgba(255, 112, 32, 0.34), transparent 70%),
-      radial-gradient(ellipse 90% 30% at 50% 88%, rgba(214, 66, 18, 0.24), transparent 72%);
-  }
-  .gate__floor::after { background: radial-gradient(ellipse 70% 80% at 50% 0%, rgba(255, 120, 40, 0.3), transparent 72%); }
-  .gate__scene { transform-origin: 50% 80%; }
+/* the Urban Sky bottle: centred, the hero of the card, breaking through its top edge */
+.gate__bottle-wrap {
+  position: relative; height: var(--gb); aspect-ratio: 576 / 1732;
+  margin: calc(var(--gb) * var(--rise) * -1) auto 22px;
 }
+.gate__bottle-wrap::before {          /* warm halo so the bottle lifts off the dark */
+  content: ""; position: absolute; left: 50%; top: 55%; width: 300%; height: 72%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at center, rgba(255, 138, 48, 0.26), transparent 66%);
+  pointer-events: none;
+}
+.gate__bottle-wrap::after {           /* contact shadow where it stands */
+  content: ""; position: absolute; z-index: -1; left: -14%; right: -14%; bottom: -2.5%; height: 6%;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.75), transparent 70%);
+}
+.gate__bottle {
+  position: relative; display: block; width: 100%; height: 100%;
+  filter: drop-shadow(0 0 16px rgba(255, 120, 40, 0.14)) drop-shadow(0 18px 22px rgba(0, 0, 0, 0.7));
+}
+.gate h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(28px, 2.7vw, 38px); line-height: 1.15; margin: 0 0 12px; text-wrap: balance; }
+.gate p { color: var(--muted); margin: 0 0 30px; }
+.gate .row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.gate .note { margin-top: 24px; font-size: 13px; color: #7d715f; }
 @media (max-width: 860px) {
-  .gate { padding: 16px; }
+  .gate { --gb: clamp(220px, 40vh, 340px); padding: 16px; }
   .gate__fire { height: 70vh; object-position: 45% 100%; }
-  .gate__card { padding: 28px 20px 24px; background: linear-gradient(180deg, rgba(24, 16, 11, 0.48), rgba(8, 6, 5, 0.64)); }
-  .gate__card img { width: 60px; margin-bottom: 14px; }
+  .gate__card { padding: 0 20px 24px; background: linear-gradient(180deg, rgba(24, 16, 11, 0.5), rgba(8, 6, 5, 0.66)); }
+  .gate__bottle-wrap { margin-bottom: 16px; }
   .gate h2 { font-size: 26px; margin-bottom: 8px; }
   .gate p { margin-bottom: 20px; font-size: 15px; }
   .gate .row { flex-wrap: nowrap; gap: 10px; }
   .gate .row .btn { padding: 0 18px; letter-spacing: 0.2em; }
   .gate .note { margin-top: 14px; }
+}
+/* short landscape screens: a smaller bottle so the whole check fits without scrolling */
+@media (max-height: 640px) {
+  .gate { --gb: clamp(160px, 38vh, 280px); }
+  .gate p { margin-bottom: 18px; }
+  .gate .note { margin-top: 12px; }
 }
 
 /* ===== loader ===== */
@@ -604,6 +596,6 @@ picture { display: contents; }
 @media (hover: none) { .cursor { display: none; } }
 
 @media (prefers-reduced-motion: reduce) {
-  body::after, .marquee__track, .gold-text, .hero__scroll i, .gate__scene, .gate__glow, .gate__floor::after { animation: none; }
+  body::after, .marquee__track, .gold-text, .hero__scroll i, .gate__glow, .gate__floor::after { animation: none; }
   .reveal { opacity: 1; transform: none; }
 }

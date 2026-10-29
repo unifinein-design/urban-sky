@@ -18,14 +18,15 @@ Then open http://localhost:4500
 - `assets/css/style.css` - all styling (colour tokens at the top)
 - `assets/js/main.js` - age gate, nav, smooth scroll, reveals, parallax, gold dust and gate embers
 - `assets/js/pour-video.js` - starts the hero pour once the visitor is in (after the age gate on a first visit)
-- `assets/video/` - the pour, colour-graded: `pour-720.mp4` (desktop), `pour-540.mp4` (phones), plus start/end stills
+- `assets/video/` - the pour, colour-graded, 1.5x speed with a fuller glass: `pour-720.mp4` (desktop), `pour-540.mp4` (phones), plus start/end stills
 - `assets/vendor/` - GSAP 3.12.5, ScrollTrigger, Lenis 1.1.13 (kept local so the site runs offline)
 - `assets/img/` - site images; each has an `.avif` copy that modern browsers load first, with the `.jpg`/`.png` as fallback
 
 ## Age gate
-- `assets/img/gate-bottle.avif` / `.png` - the Goalong Special bottle from the original site, upscaled 4x and relit for firelight (warm grade, rim light, clean base)
-- `assets/video/fire-720.mp4` / `fire-480.mp4` - real flames, a seamless 10.5s loop (last second cross-dissolved into the first), blended with `mix-blend-mode: screen`
-- Only first-time visitors download these; returning visitors skip the gate entirely
+- Shown on every fresh visit and every refresh; skipped only when clicking between pages of the site in the same tab after answering (inline script in each page's `<head>`, answer kept in `sessionStorage`)
+- `assets/img/gate-bottle.avif` / `.png` - an Urban Sky private-label bottle: a real bottle photo from the original site (upscaled 4x) with a new label carrying the Urban Sky crest and name, relit for firelight
+- `assets/video/fire-soft-960.mp4` / `fire-soft-640.mp4` - real flames, blurred and dimmed into soft background firelight, a seamless loop blended with `mix-blend-mode: screen`
+- The bottle and fire are fetched only when the gate shows; the home pour buffers while the gate is open
 
 ## Image and footage credits
 - Hero pour: Pexels video 7255224, used under the Pexels licence (free for commercial use, no attribution required).
