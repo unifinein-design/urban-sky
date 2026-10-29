@@ -9,13 +9,35 @@
   const gate = document.getElementById("gate");
   let verified = false;
   try { verified = localStorage.getItem("us-age-ok") === "1"; } catch (e) {}
+  // live flames behind the bottle: only fetched and played while the gate is on screen
+  const fire = gate && gate.querySelector(".gate__fire");
+  function startFire() {
+    if (!fire || reduce) return;
+    fire.addEventListener("playing", () => {
+      gate.classList.add("fire-on");
+      window.dispatchEvent(new Event("gate:ready"));
+    }, { once: true });
+    fire.preload = "auto";
+    const p = fire.play();
+    if (p && p.catch) p.catch(() => {}); // autoplay refused: the glow and embers still carry the scene
+  }
+  function stopFire() {
+    if (!fire) return;
+    fire.pause();
+    fire.querySelectorAll("source").forEach((s) => s.remove());
+    fire.removeAttribute("src");
+    fire.load(); // releases the decoder and the buffered video
+  }
+  const closeGate = () => { gate.hidden = true; stopFire(); start(); };
+
   if (gate) {
-    if (verified) gate.hidden = true;
+    if (verified) { gate.hidden = true; stopFire(); }
+    else startFire();
     gate.querySelector("[data-yes]").addEventListener("click", () => {
       try { localStorage.setItem("us-age-ok", "1"); } catch (e) {}
       if (hasGsap && !reduce) {
-        gsap.to(gate, { opacity: 0, duration: 0.8, ease: "power2.inOut", onComplete: () => { gate.hidden = true; start(); } });
-      } else { gate.hidden = true; start(); }
+        gsap.to(gate, { opacity: 0, duration: 0.8, ease: "power2.inOut", onComplete: closeGate });
+      } else closeGate();
     });
     gate.querySelector("[data-no]").addEventListener("click", () => {
       gate.querySelector(".note").textContent = "Sorry, you must be of legal drinking age to enter.";
