@@ -24,14 +24,15 @@ Then open http://localhost:4500
 
 ## Age gate
 - Shown on every fresh visit and every refresh; skipped only when clicking between pages of the site in the same tab after answering (inline script in each page's `<head>`, answer kept in `sessionStorage`)
-- `assets/img/gate-bottle.avif` / `.png` - an Urban Sky private-label bottle: a real bottle photo from the original site (upscaled 4x) with a new label carrying the Urban Sky crest and name, relit for firelight
+- `assets/img/gate-logo.avif` / `.png` - the Urban Sky crest and wordmark from the original site, upscaled 4x, centred above the question
 - `assets/video/fire-soft-960.mp4` / `fire-soft-640.mp4` - real flames, blurred and dimmed into soft background firelight, a seamless loop blended with `mix-blend-mode: screen`
-- The bottle and fire are fetched only when the gate shows; the home pour buffers while the gate is open
+- The crest and fire are fetched only when the gate shows; the home pour buffers while the gate is open
 
 ## Image and footage credits
 - Hero pour: Pexels video 7255224, used under the Pexels licence (free for commercial use, no attribution required).
 - Age gate flames: Pexels video 5659678, same licence.
 - Bottle and brand imagery: from the original Urban Sky Wix site.
+- Home page Goalong splash photo: supplied by Urban Sky; the corner brand text was removed, the image upscaled 4x and the label lettering rebuilt from the same artwork.
 
 ## AVIF note
 Encode AVIFs only at even pixel sizes: on this Mac's encoder, odd widths or heights produced files that Chrome drew as fully transparent.

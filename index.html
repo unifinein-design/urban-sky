@@ -27,9 +27,9 @@
     </div>
     <canvas class="gate__embers" aria-hidden="true"></canvas>
     <div class="gate__content">
-      <div class="gate__bottle-wrap" aria-hidden="true">
-        <picture><source type="image/avif" data-srcset="assets/img/gate-bottle.avif"><img class="gate__bottle" data-src="assets/img/gate-bottle.png" width="576" height="1732" alt="" decoding="async" fetchpriority="high"></picture>
-        <script>/* fetch the bottle straight away whenever the age check will show */if(!document.documentElement.classList.contains("age-ok"))document.querySelectorAll(".gate__bottle-wrap [data-srcset],.gate__bottle-wrap [data-src]").forEach(function(e){if(e.dataset.srcset)e.srcset=e.dataset.srcset;else e.src=e.dataset.src})</script>
+      <div class="gate__logo" aria-hidden="true">
+        <picture><source type="image/avif" data-srcset="assets/img/gate-logo.avif"><img data-src="assets/img/gate-logo.png" width="536" height="600" alt="" decoding="async" fetchpriority="high"></picture>
+        <script>/* fetch the crest straight away whenever the age check will show */if(!document.documentElement.classList.contains("age-ok"))document.querySelectorAll(".gate__logo [data-srcset],.gate__logo [data-src]").forEach(function(e){if(e.dataset.srcset)e.srcset=e.dataset.srcset;else e.src=e.dataset.src})</script>
       </div>
       <div class="gate__card">
         <h2 id="gate-title">Welcome to Urban Sky</h2>
@@ -98,8 +98,8 @@
     <!-- ===== Our story ===== -->
     <section class="section">
       <div class="wrap story">
-        <div class="story__media reveal">
-          <picture><source type="image/avif" srcset="assets/img/toast.avif"><img width="1200" height="800" loading="lazy" decoding="async" src="assets/img/toast.jpg" alt="Guests raising a toast" data-parallax="8"></picture>
+        <div class="story__media story__media--still reveal">
+          <picture><source type="image/avif" srcset="assets/img/goalong-splash.avif"><img width="1440" height="1800" loading="lazy" decoding="async" src="assets/img/goalong-splash.jpg" alt="A bottle of Goalong Single Malt Whiskey on a sea rock in a splash of water"></picture>
           <div class="story__frame"></div>
         </div>
         <div class="story__copy">
