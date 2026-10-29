@@ -24,21 +24,22 @@
         <source src="assets/video/fire-soft-640.mp4" type="video/mp4" media="(max-width: 860px)">
         <source src="assets/video/fire-soft-960.mp4" type="video/mp4">
       </video>
-      <div class="gate__floor"></div>
     </div>
     <canvas class="gate__embers" aria-hidden="true"></canvas>
-    <div class="gate__card">
+    <div class="gate__content">
       <div class="gate__bottle-wrap" aria-hidden="true">
         <picture><source type="image/avif" data-srcset="assets/img/gate-bottle.avif"><img class="gate__bottle" data-src="assets/img/gate-bottle.png" width="576" height="1732" alt="" decoding="async" fetchpriority="high"></picture>
         <script>/* fetch the bottle straight away whenever the age check will show */if(!document.documentElement.classList.contains("age-ok"))document.querySelectorAll(".gate__bottle-wrap [data-srcset],.gate__bottle-wrap [data-src]").forEach(function(e){if(e.dataset.srcset)e.srcset=e.dataset.srcset;else e.src=e.dataset.src})</script>
       </div>
-      <h2 id="gate-title">Welcome to Urban Sky</h2>
-      <p>Are you of legal drinking age in your country?</p>
-      <div class="row">
-        <button class="btn btn--solid" data-yes>Yes, enter</button>
-        <button class="btn btn--plain" data-no>No</button>
+      <div class="gate__card">
+        <h2 id="gate-title">Welcome to Urban Sky</h2>
+        <p>Are you of legal drinking age in your country?</p>
+        <div class="row">
+          <button class="btn btn--solid" data-yes>Yes, enter</button>
+          <button class="btn btn--plain" data-no>No</button>
+        </div>
+        <p class="note">Please enjoy responsibly.</p>
       </div>
-      <p class="note">Please enjoy responsibly.</p>
     </div>
   </div>
 

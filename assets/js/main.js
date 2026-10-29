@@ -281,30 +281,36 @@
     },
   });
 
-  // embers: hot sparks rising from the bottom, swaying and flickering out
+  // embers: a slow, subtle burn. Each one glows up, drifts gently upward for most of a minute,
+  // breathes slowly and fades out; no per-frame flicker.
   const gate = document.getElementById("gate");
   const ember = sprite("rgba(255,236,190,1)", "rgba(255,120,30,0.75)");
   const emberSoft = sprite("rgba(255,170,90,0.9)", "rgba(220,70,20,0.35)");
   const embers = field(document.querySelector(".gate__embers"), {
-    count: small ? 60 : 120, glow: ember, glowBig: emberSoft,
+    count: small ? 40 : 80, glow: ember, glowBig: emberSoft,
     alive: () => gate && !gate.hidden && getComputedStyle(gate).display !== "none",
     spawn(p, first) {
       p.big = Math.random() < 0.14;               // a few large, out-of-focus embers for depth
       p.x = Math.random() * 1.1 - 0.05;
-      p.y = first ? Math.random() * 1.1 : 1.05 + Math.random() * 0.1;
+      p.y = first ? Math.random() * 1.1 : 0.2 + Math.random() * 0.9;
       p.r = p.big ? 16 + Math.random() * 26 : 4 + Math.random() * 8;
-      p.vy = (p.big ? 0.0012 : 0.0022) + Math.random() * 0.0035;
-      p.vx = (Math.random() - 0.35) * 0.0009;      // slight drift to the right, like heat on air
-      p.o = Math.random() * 6.28; p.life = 0.55 + Math.random() * 0.45; p.dead = false; p.a = 0;
+      p.vy = (p.big ? 0.00035 : 0.0005) + Math.random() * 0.0006;   // 15-40 s to cross the screen
+      p.vx = (Math.random() - 0.4) * 0.00018;                         // the faintest drift, like warm air
+      p.o = Math.random() * 6.28;
+      p.span = 2700 + Math.random() * 900;        // lifetime in frames (about 45-60 s)
+      p.age = first ? Math.random() * p.span : 0;
+      p.dead = false; p.a = 0;
       return p;
     },
     step(p, dt, t) {
+      p.age += dt;
       p.y -= p.vy * dt;
-      p.x += (p.vx + Math.sin(t / 700 + p.o) * 0.0007) * dt;
-      p.life -= 0.0016 * dt;
-      const flicker = 0.65 + Math.sin(t / 90 + p.o * 7) * 0.2 + Math.random() * 0.15;
-      p.a = Math.max(0, Math.min(1, p.life * 1.6)) * flicker * (p.big ? 0.45 : 1);
-      if (p.life <= 0 || p.y < -0.05) p.dead = true;
+      p.x += (p.vx + Math.sin(t / 5200 + p.o) * 0.00016) * dt;
+      const k = p.age / p.span;
+      const envelope = Math.min(1, k / 0.12) * Math.min(1, (1 - k) / 0.25);  // slow glow-up and fade-out
+      const breath = 0.72 + Math.sin(t / 1400 + p.o) * 0.28;                // one slow swell every ~9 s
+      p.a = Math.max(0, envelope) * breath * (p.big ? 0.4 : 0.9);
+      if (k >= 1 || p.y < -0.05) p.dead = true;
     },
   });
   window.__embers = embers;
