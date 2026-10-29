@@ -26,7 +26,8 @@
       </video>
       <div class="gate__floor"></div>
       <div class="gate__product">
-        <picture><source type="image/avif" srcset="assets/img/gate-bottle.avif"><img class="gate__bottle" src="assets/img/gate-bottle.png" width="576" height="1732" alt="" decoding="async" loading="lazy"></picture>
+        <picture><source type="image/avif" data-srcset="assets/img/gate-bottle.avif"><img class="gate__bottle" data-src="assets/img/gate-bottle.png" width="576" height="1732" alt="" decoding="async" fetchpriority="high"></picture>
+        <script>/* fetch the bottle straight away when the gate will show; returning visitors never download it */if(!document.documentElement.classList.contains("age-ok"))document.querySelectorAll(".gate__product [data-srcset],.gate__product [data-src]").forEach(function(e){if(e.dataset.srcset)e.srcset=e.dataset.srcset;else e.src=e.dataset.src})</script>
       </div>
     </div>
     <canvas class="gate__embers" aria-hidden="true"></canvas>
