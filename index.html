@@ -6,20 +6,22 @@
   <title>Urban Sky Holdings | Fine Wine and Spirits in Sri Lanka</title>
   <meta name="description" content="Urban Sky Holdings (Pvt) Ltd - importers and distributors of premium wine, liqueurs and spirits for hotels, resorts, restaurants, clubs and bars across Sri Lanka.">
   <meta name="theme-color" content="#0a0806">
-  <link rel="icon" href="assets/img/logo.png">
-  <link rel="preload" as="image" href="assets/pour/000.jpg" media="(min-width: 861px)">
-  <link rel="preload" as="image" href="assets/pour/m/000.jpg" media="(max-width: 860px)">
+  <link rel="icon" href="assets/img/favicon.png">
+  <link rel="preload" as="image" href="assets/video/pour-720-start.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
+  <script>try{if(localStorage.getItem("us-age-ok")==="1")document.documentElement.classList.add("age-ok")}catch(e){}</script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
   <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
-    <div>
-      <img width="804" height="900" src="assets/img/logo.png" alt="Urban Sky crest">
+    <div class="gate__bg" aria-hidden="true"><picture><source type="image/avif" srcset="assets/img/gate-bg.avif"><img width="1920" height="1280" src="assets/img/gate-bg.jpg" alt="" decoding="async" loading="lazy"></picture></div>
+    <canvas class="gate__embers" aria-hidden="true"></canvas>
+    <div class="gate__card">
+      <picture><source type="image/avif" srcset="assets/img/logo.avif"><img width="214" height="240" src="assets/img/logo.png" alt="Urban Sky crest"></picture>
       <h2 id="gate-title">Welcome to Urban Sky</h2>
       <p>Are you of legal drinking age in your country?</p>
       <div class="row">
@@ -30,16 +32,11 @@
     </div>
   </div>
 
-  <div class="loader" aria-hidden="true">
-    <img width="804" height="900" class="loader__crest" src="assets/img/logo.png" alt="">
-    <div class="loader__bar"><i></i></div>
-  </div>
-
   <div class="cursor" aria-hidden="true"></div>
 
   <header class="nav">
     <div class="wrap">
-      <a class="nav__brand" href="index.html"><img loading="lazy" decoding="async" width="804" height="900" src="assets/img/logo.png" alt="Urban Sky home"><span>URBAN SKY</span></a>
+      <a class="nav__brand" href="index.html"><picture><source type="image/avif" srcset="assets/img/logo.avif"><img width="214" height="240" src="assets/img/logo.png" alt="Urban Sky home"></picture><span>URBAN SKY</span></a>
       <button class="nav__toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
       <ul class="nav__links">
         <li><a href="index.html" aria-current="page">Home</a></li>
@@ -67,11 +64,16 @@
         </div>
 
         <div class="hero__scene" aria-hidden="true">
-          <canvas class="hero__film"></canvas>
-          <img class="hero__crest" src="assets/img/crest-mono.png" width="804" height="900" alt="">
+          <div class="hero__filmbox">
+            <video class="hero__film" muted playsinline preload="auto" poster="assets/video/pour-720-start.jpg" data-end-poster="assets/video/pour-720-end.jpg">
+              <source src="assets/video/pour-540.mp4" type="video/mp4" media="(max-width: 860px)">
+              <source src="assets/video/pour-720.mp4" type="video/mp4">
+            </video>
+          </div>
+          <picture><source type="image/avif" srcset="assets/img/crest-mono.avif"><img width="393" height="440" class="hero__crest" src="assets/img/crest-mono.png" alt=""></picture>
         </div>
 
-        <div class="hero__scroll" aria-hidden="true">Scroll to pour<i></i></div>
+        <div class="hero__scroll" aria-hidden="true">Scroll to explore<i></i></div>
       </div>
     </section>
 
@@ -86,7 +88,7 @@
     <section class="section">
       <div class="wrap story">
         <div class="story__media reveal">
-          <img loading="lazy" decoding="async" width="2400" height="1600" src="assets/img/toast.jpg" alt="Guests raising a toast" data-parallax="8">
+          <picture><source type="image/avif" srcset="assets/img/toast.avif"><img width="1200" height="800" loading="lazy" decoding="async" src="assets/img/toast.jpg" alt="Guests raising a toast" data-parallax="8"></picture>
           <div class="story__frame"></div>
         </div>
         <div class="story__copy">
@@ -107,9 +109,9 @@
 
     <!-- ===== Parallax band ===== -->
     <section class="band">
-      <div class="band__img" style="background-image:url('assets/img/cocktail-pour.jpg')" data-parallax="10"></div>
+      <div class="band__img" style="background-image:url('assets/img/cocktail-pour.jpg');background-image:image-set(url('assets/img/cocktail-pour.avif') type('image/avif'), url('assets/img/cocktail-pour.jpg') type('image/jpeg'))" data-parallax="10"></div>
       <div class="band__inner">
-        <img loading="lazy" decoding="async" width="804" height="900" class="band__crest reveal" src="assets/img/crest-mono.png" alt="">
+        <picture><source type="image/avif" srcset="assets/img/crest-mono.avif"><img width="393" height="440" loading="lazy" decoding="async" class="band__crest reveal" src="assets/img/crest-mono.png" alt=""></picture>
         <p class="band__quote reveal">Where quality meets <span class="gold-text">passion.</span></p>
       </div>
     </section>
@@ -123,13 +125,13 @@
         </div>
         <div class="vm" data-stagger>
           <article class="vm__card">
-            <img loading="lazy" decoding="async" width="2238" height="2400" src="assets/img/vision.jpg" alt="Red and white wine with grapes">
+            <picture><source type="image/avif" srcset="assets/img/vision.avif"><img width="1119" height="1200" loading="lazy" decoding="async" src="assets/img/vision.jpg" alt="Red and white wine with grapes"></picture>
             <div class="vm__num">I</div>
             <h3>Our Vision</h3>
             <p>We aspire to foster the finest food and drink culture in Sri Lanka, positioning the country as a global leader in this realm. Our future success hinges on understanding our customers' needs and leveraging technology to meet and exceed their expectations.</p>
           </article>
           <article class="vm__card">
-            <img loading="lazy" decoding="async" width="2400" height="2400" src="assets/img/mission.jpg" alt="A glass of whisky in hand">
+            <picture><source type="image/avif" srcset="assets/img/mission.avif"><img width="1200" height="1200" loading="lazy" decoding="async" src="assets/img/mission.jpg" alt="A glass of whisky in hand"></picture>
             <div class="vm__num">II</div>
             <h3>Our Mission</h3>
             <p>Our mission is to be Sri Lanka's most innovative, service-driven beverage wholesaler. We strive to connect local distillers and brewers with premium global brands, paving the way for a vibrant and unique drinking culture in Sri Lanka.</p>
@@ -144,10 +146,10 @@
         <div class="brands__head">
           <span class="eyebrow reveal">Our Brands</span>
           <h2 class="h-serif reveal" style="margin-top:20px">Presenting <em>Goalong Liquor</em></h2>
-          <img loading="lazy" decoding="async" width="1405" height="982" class="brands__logo reveal" src="assets/img/goalong-logo.png" alt="Goalong Liquor - Go along for Dreams">
+          <picture><source type="image/avif" srcset="assets/img/goalong-logo.avif"><img width="760" height="531" loading="lazy" decoding="async" class="brands__logo reveal" src="assets/img/goalong-logo.png" alt="Goalong Liquor - Go along for Dreams"></picture>
         </div>
         <div class="brands__range reveal">
-          <img loading="lazy" decoding="async" width="1800" height="1179" src="assets/img/goalong-range.png" alt="The Goalong Liquor range of whisky, gin, cognac and vodka">
+          <picture><source type="image/avif" srcset="assets/img/goalong-range.avif"><img width="1600" height="1048" loading="lazy" decoding="async" src="assets/img/goalong-range.png" alt="The Goalong Liquor range of whisky, gin, cognac and vodka"></picture>
           <div class="brands__floor"></div>
         </div>
         <div style="text-align:center;margin-top:60px" class="reveal">
@@ -173,7 +175,7 @@
     <div class="wrap">
       <div class="footer__top">
         <div class="footer__brand-wrap">
-          <div class="footer__brand"><img loading="lazy" decoding="async" width="804" height="900" src="assets/img/logo.png" alt=""><p>URBAN SKY<br>HOLDINGS (PVT) LTD</p></div>
+          <div class="footer__brand"><picture><source type="image/avif" srcset="assets/img/logo.avif"><img width="214" height="240" loading="lazy" decoding="async" src="assets/img/logo.png" alt=""></picture><p>URBAN SKY<br>HOLDINGS (PVT) LTD</p></div>
           <p class="footer__tag">Your premier supplier of fine wine and spirits in Sri Lanka.</p>
         </div>
         <div>
@@ -205,6 +207,6 @@
   <script src="assets/vendor/ScrollTrigger.min.js"></script>
   <script src="assets/vendor/lenis.min.js"></script>
   <script src="assets/js/main.js"></script>
-  <script src="assets/js/pour-film.js"></script>
+  <script src="assets/js/pour-video.js"></script>
 </body>
 </html>
