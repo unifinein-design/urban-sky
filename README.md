@@ -32,6 +32,7 @@ Then open http://localhost:4500
 - Hero pour: Pexels video 7255224, used under the Pexels licence (free for commercial use, no attribution required).
 - Age gate flames: Pexels video 5659678, same licence.
 - Bottle and brand imagery: from the original Urban Sky Wix site.
+- Goalong range lineup: from the full-size Wix original, JPEG blocking cleaned, upscaled 4x with Real-ESRGAN and blended so no label lettering is changed; served at 2000 and 1200 px.
 - Home page Goalong splash photo: supplied by Urban Sky; the corner brand text was removed, the image upscaled 4x and the label lettering rebuilt from the same artwork.
 
 ## AVIF note
