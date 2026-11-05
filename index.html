@@ -5,10 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Urban Sky Holdings | Fine Wine and Spirits in Sri Lanka</title>
   <meta name="description" content="Urban Sky Holdings (Pvt) Ltd - importers and distributors of premium wine, liqueurs and spirits for hotels, resorts, restaurants, clubs and bars across Sri Lanka.">
-  <meta name="theme-color" content="#f6f1e7">
+  <meta name="theme-color" content="#30261d">
   <link rel="icon" href="assets/img/favicon.png">
-  <link rel="preload" as="image" type="image/avif" href="assets/img/hero-whisky-m.avif" media="(max-width: 860px)" fetchpriority="high">
-  <link rel="preload" as="image" type="image/avif" href="assets/img/hero-whisky-2560.avif" imagesrcset="assets/img/hero-whisky-1600.avif 1600w, assets/img/hero-whisky-2560.avif 2560w" imagesizes="100vw" media="(min-width: 861px)" fetchpriority="high">
+  <link rel="preload" as="image" type="image/avif" href="assets/video/pour-540-start.avif" media="(max-width: 860px) and (max-resolution: 1.49dppx) and (prefers-reduced-motion: no-preference)" fetchpriority="high">
+  <link rel="preload" as="image" type="image/avif" href="assets/video/pour-720-start.avif" media="(max-width: 599px) and (min-resolution: 1.5dppx) and (prefers-reduced-motion: no-preference)" fetchpriority="high">
+  <link rel="preload" as="image" type="image/avif" href="assets/video/pour-1080-start.avif" media="(min-width: 600px) and (max-width: 860px) and (min-resolution: 1.5dppx) and (prefers-reduced-motion: no-preference)" fetchpriority="high">
+  <link rel="preload" as="image" type="image/avif" href="assets/video/pour-1080-start.avif" media="(min-width: 861px) and (min-resolution: 1.5dppx) and (prefers-reduced-motion: no-preference)" fetchpriority="high">
+  <link rel="preload" as="image" type="image/avif" href="assets/video/pour-1080-start.avif" media="(min-width: 2000px) and (prefers-reduced-motion: no-preference)" fetchpriority="high">
+  <link rel="preload" as="image" type="image/avif" href="assets/video/pour-720-start.avif" media="(min-width: 861px) and (max-width: 1999px) and (max-resolution: 1.49dppx) and (prefers-reduced-motion: no-preference)" fetchpriority="high">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
@@ -62,21 +66,23 @@
   </header>
 
   <main id="main">
-    <!-- ===== Hero: the whisky photograph ===== -->
+    <!-- ===== Hero: the pour, on a pool of warm light ===== -->
     <section class="hero" data-glow>
       <div class="hero__stage">
-        <div class="hero__media" aria-hidden="true">
-          <div class="hero__frame">
-            <picture>
-              <source type="image/avif" media="(max-width: 860px)" srcset="assets/img/hero-whisky-m.avif">
-              <source type="image/jpeg" media="(max-width: 860px)" srcset="assets/img/hero-whisky-m.jpg">
-              <source type="image/avif" srcset="assets/img/hero-whisky-1600.avif 1600w, assets/img/hero-whisky-2560.avif 2560w" sizes="100vw">
-              <img class="hero__img" width="2560" height="1656" src="assets/img/hero-whisky-2560.jpg" srcset="assets/img/hero-whisky-1600.jpg 1600w, assets/img/hero-whisky-2560.jpg 2560w" sizes="100vw" alt="" fetchpriority="high" decoding="async">
-            </picture>
-            <span class="hero__sheen"><i></i></span>
+        <div class="hero__scene" aria-hidden="true">
+          <div class="hero__glow"></div>
+          <div class="hero__filmbox">
+            <video class="hero__film" muted playsinline disableremoteplayback disablepictureinpicture preload="none" width="720" height="960" data-end-poster="assets/video/pour-720-end.jpg">
+              <source src="assets/video/pour-1080.mp4" type="video/mp4" media="(min-width: 600px) and (max-width: 860px) and (min-resolution: 1.5dppx)">
+              <source src="assets/video/pour-720.mp4" type="video/mp4" media="(max-width: 860px) and (min-resolution: 1.5dppx)">
+              <source src="assets/video/pour-540.mp4" type="video/mp4" media="(max-width: 860px)">
+              <source src="assets/video/pour-1080.mp4" type="video/mp4" media="(min-resolution: 1.5dppx), (min-width: 2000px)">
+              <source src="assets/video/pour-720.mp4" type="video/mp4">
+            </video>
+            <script>/* posters that match the film size the browser picks (the empty glass, or the full one for reduced motion), as AVIF where the browser decodes it, else JPEG */(function(){var v=document.currentScript.parentNode.querySelector("video"),m=function(q){return matchMedia(q).matches},hi=m("(min-resolution: 1.5dppx)"),n=m("(max-width: 860px)")?(hi?(m("(min-width: 600px)")?1080:720):540):(hi||m("(min-width: 2000px)")?1080:720),b="assets/video/pour-"+n,r=m("(prefers-reduced-motion: reduce)"),k="us-avif",c=null,x;try{c=localStorage.getItem(k)}catch(e){}x=c?c==="1":!!(window.CSS&&CSS.supports&&CSS.supports("text-wrap","balance"));function set(a){var e=a?".avif":".jpg";v.setAttribute("data-end-poster",b+"-end"+e);v.poster=b+(r?"-end":"-start")+e}if(r)v.preload="none";set(x);if(c===null){var i=new Image();i.onload=function(){try{localStorage.setItem(k,"1")}catch(e){}};i.onerror=function(){try{localStorage.setItem(k,"0")}catch(e){}if(x)set(false)};i.src="data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAE1pUHJhdmlmbWlhZm1pZjEAAAEhbWV0YQAAAAAAAAAhaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAAAAAAAkZGluZgAAABxkcmVmAAAAAAAAAAEAAAAMdXJsIAAAAAEAAAAOcGl0bQAAAAAAAQAAACNpaW5mAAAAAAABAAAAFWluZmUCAAAAAAEAAGF2MDEAAAAAgWlwcnAAAABgaXBjbwAAABNjb2xybmNseAACAAIABoAAAAAMY2xsaQDLAEAAAAAUaXNwZQAAAAAAAAACAAAAAgAAAAlpcm90AAAAABBwaXhpAAAAAAMICAgAAAAMYXYxQ4EADAAAAAAZaXBtYQAAAAAAAAABAAEGgQIDBYaEAAAAHmlsb2MAAAAARAAAAQABAAAAAQAAAVEAAAAiAAAAAW1kYXQAAAAAAAAAMhIACgwAAAAABn/8CBAQNCAyEBABvgBJJJIgALASrSAlpCw="}})()</script>
           </div>
-          <canvas class="hero__dust"></canvas>
         </div>
+        <canvas class="hero__dust" aria-hidden="true"></canvas>
 
         <div class="hero__copy">
           <p class="hero__welcome" data-intro>Welcome to</p>
@@ -160,7 +166,7 @@
         <div class="brands__head">
           <span class="eyebrow reveal">Our Brands</span>
           <h2 class="h-serif reveal" style="margin-top:20px">Presenting <em>Goalong Liquor</em></h2>
-          <picture><source type="image/avif" srcset="assets/img/goalong-logo-ink.avif"><img width="760" height="532" loading="lazy" decoding="async" class="brands__logo reveal" src="assets/img/goalong-logo-ink.png" alt="Goalong Liquor - Go along for Dreams"></picture>
+          <picture><source type="image/avif" srcset="assets/img/goalong-logo.avif"><img width="760" height="532" loading="lazy" decoding="async" class="brands__logo reveal" src="assets/img/goalong-logo.png" alt="Goalong Liquor - Go along for Dreams"></picture>
         </div>
         <div class="brands__range reveal">
           <picture><source type="image/avif" srcset="assets/img/goalong-range-1200.avif 1200w, assets/img/goalong-range.avif 2000w" sizes="(max-width: 1064px) calc(100vw - 32px), 1000px"><img width="2000" height="1310" loading="lazy" decoding="async" srcset="assets/img/goalong-range-1200.png 1200w, assets/img/goalong-range.png 2000w" sizes="(max-width: 1064px) calc(100vw - 32px), 1000px" src="assets/img/goalong-range.png" alt="The Goalong Liquor range of whisky, gin, cognac and vodka"></picture>
@@ -221,5 +227,6 @@
   <script src="assets/vendor/ScrollTrigger.min.js"></script>
   <script src="assets/vendor/lenis.min.js"></script>
   <script src="assets/js/main.js"></script>
+  <script src="assets/js/pour-video.js"></script>
 </body>
 </html>

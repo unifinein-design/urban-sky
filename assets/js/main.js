@@ -1,4 +1,4 @@
-/* Urban Sky - shared site behaviour ("Ivory Gallery" motion system)
+/* Urban Sky - shared site behaviour ("Cellar Light" motion system)
    Motion vocabulary, used everywhere so the site moves as one piece:
    - words rise out of masks, line by line (expo.out, 1.25 s, 0.1 s between lines)
    - photographs open with a clip-path wipe while the picture settles from a slight scale (power4.inOut 1.5 s / expo.out 2.2 s)
@@ -241,16 +241,13 @@
 
     /* ===== intro: home ===== */
     if (hero) {
-      const media = hero.querySelector(".hero__media");
-      const frame = hero.querySelector(".hero__frame");
+      const scene = hero.querySelector(".hero__scene");
       const copy = hero.querySelector(".hero__copy");
       const title = hero.querySelector("[data-split]");
       const tl = gsap.timeline({ delay: 0.05 });
-      // the photograph is first hung as a framed print on the ivory wall, then opens to full bleed
-      tl.fromTo(media, { clipPath: small ? "inset(6% 5% 6% 5%)" : "inset(9% 7% 9% 7%)" },
-        { clipPath: "inset(0% 0% 0% 0%)", duration: 1.9, ease: "power4.inOut" }, 0);
-      // slow cinematic push-in towards the glass, over half a minute
-      gsap.fromTo(frame, { scale: 1.0 }, { scale: 1.1, duration: 30, ease: "sine.out" });
+      // the pool of light comes up and settles gently onto the glass; at rest nothing is cropped or moved
+      if (scene) tl.fromTo(scene, { opacity: 0, scale: 1.04, transformOrigin: small ? "50% 70%" : "72% 52%" },
+        { opacity: 1, scale: 1, duration: 2.2, ease: "power3.out", clearProps: "transform" }, 0);
       if (title) {
         const chars = splitChars(title);
         title.classList.add("is-split");
@@ -267,16 +264,7 @@
       if (scrollCue) tl.fromTo(scrollCue, { opacity: 0 }, { opacity: 1, duration: 1.2, ease: "power2.out", clearProps: "opacity" }, 2.0);
       if (nav) tl.fromTo(nav, { opacity: 0, y: -18 }, { opacity: 1, y: 0, duration: 1.2, ease: "expo.out", clearProps: "transform,opacity" }, 1.0);
 
-      // a band of light crosses the tumbler, then again every few seconds while the hero is on screen
-      const sheen = hero.querySelector(".hero__sheen i");
-      if (sheen) {
-        const sweep = gsap.timeline({ repeat: -1, repeatDelay: 6.5, delay: 2.1 })
-          .fromTo(sheen, { xPercent: -130 }, { xPercent: 330, duration: 2.4, ease: "power2.inOut" });
-        ScrollTrigger.create({ trigger: hero, start: "top bottom", end: "bottom top", onToggle: (s) => (s.isActive ? sweep.resume() : sweep.pause()) });
-      }
-      // scroll-linked depth: the photograph sinks slower than the page, the words lift away
-      gsap.to(frame, { y: () => media.offsetHeight * 0.26, ease: "none",
-        scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true, invalidateOnRefresh: true } });
+      // scroll-linked depth (the film itself never follows the scroll): the words lift away and fade a little
       if (!small) gsap.to(copy, { y: () => -hero.offsetHeight * 0.12, opacity: 0.15, ease: "none",
         scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true, invalidateOnRefresh: true } });
     }
@@ -459,7 +447,7 @@
       });
     }
 
-    /* ===== page change: an ivory veil draws up before the next page ===== */
+    /* ===== page change: an espresso veil draws up before the next page ===== */
     const veil = document.createElement("div");
     veil.className = "veil";
     veil.setAttribute("aria-hidden", "true");
@@ -542,7 +530,7 @@
     return { run };
   }
 
-  // gold dust: slow, soft, drifting upward through the hero photograph
+  // gold dust: slow, soft, drifting upward through the hero
   const gold = sprite("rgba(255,242,206,1)", "rgba(236,196,118,0.55)");
   field(document.querySelector(".hero__dust"), {
     count: small ? 22 : 46, glow: gold, glowBig: gold,
