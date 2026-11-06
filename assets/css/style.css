@@ -312,10 +312,11 @@ picture { display: contents; }
 .hero__dust { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .hero__copy { position: relative; z-index: 3; padding-left: max(var(--gutter), calc((100vw - var(--max)) / 2)); padding-right: 24px; }
 .hero__copy { container-type: inline-size; }
-/* one line, scaled to the text column so it always sits beside the glass (the line is ~20.3x its font size wide) */
-.hero__title { font-size: clamp(24px, 2.05vw, 40px); letter-spacing: 0.02em; white-space: nowrap; }
-@supports (width: 1cqi) { .hero__title { font-size: clamp(18px, calc(100cqi / 20.4), 40px); } }
+/* one line, scaled to the text column so it always sits beside the glass (the line is ~18x its font size wide) */
+.hero__title { font-size: clamp(24px, 2.3vw, 46px); letter-spacing: 0.02em; white-space: nowrap; }
+@supports (width: 1cqi) { .hero__title { font-size: clamp(18px, calc(100cqi / 18.1), 46px); } }
 .hero__title .word { display: inline-block; white-space: nowrap; }
+.hero__welcome { font-style: italic; font-weight: 500; font-size: 0.6em; letter-spacing: 0.01em; }
 .hero__title .char { display: inline-block; will-change: transform, opacity; }
 .hero__rule { width: 120px; height: 1px; background: linear-gradient(90deg, var(--gold), transparent); margin: 34px 0 26px; transform-origin: left; }
 .hero__tag { font-family: var(--serif); font-size: clamp(21px, 2vw, 28px); line-height: 1.4; margin: 0 0 38px; color: #efe5d2; max-width: 30ch; }
