@@ -130,31 +130,19 @@
 
   /* ---------- page intro + scroll animations ---------- */
   function splitChars(el) {
+    const text = el.textContent;
     // transformed children drop out of a parent's background-clip:text, so each char carries the gold itself
     const gold = el.classList.contains("gold-text");
     el.classList.remove("gold-text");
-    el.setAttribute("aria-label", el.textContent.trim().replace(/\s+/g, " "));
-    // keep inline styling spans (e.g. the small "Welcome to") by giving their class to each of their words
-    const parts = [...el.childNodes].map((n) => ({ text: n.textContent, cls: n.nodeType === 1 ? n.className : "" }));
     el.textContent = "";
-    let first = true;
-    // chars are grouped per word, with real spaces between words, so a long line can still wrap on phones
-    parts.forEach(({ text, cls }) => {
-      text.trim().split(/\s+/).filter(Boolean).forEach((word) => {
-        if (!first) el.appendChild(document.createTextNode(" "));
-        first = false;
-        const w = document.createElement("span");
-        w.className = cls ? "word " + cls : "word";
-        w.setAttribute("aria-hidden", "true");
-        for (const ch of word) {
-          const s = document.createElement("span");
-          s.className = gold ? "char gold-text" : "char";
-          s.textContent = ch;
-          w.appendChild(s);
-        }
-        el.appendChild(w);
-      });
-    });
+    el.setAttribute("aria-label", text);
+    for (const ch of text) {
+      const s = document.createElement("span");
+      s.className = gold ? "char gold-text" : "char";
+      s.setAttribute("aria-hidden", "true");
+      s.textContent = ch === " " ? " " : ch;
+      el.appendChild(s);
+    }
     return el.querySelectorAll(".char");
   }
 
@@ -179,7 +167,7 @@
     const title = document.querySelector("[data-split]");
     if (title) {
       const chars = splitChars(title);
-      tl.from(chars, { yPercent: 110, opacity: 0, rotateX: -80, stagger: Math.min(0.045, 1 / chars.length), duration: 1.1, ease: "expo.out" }, loader ? "-=0.45" : 0);
+      tl.from(chars, { yPercent: 110, opacity: 0, rotateX: -80, stagger: 0.045, duration: 1.1, ease: "expo.out" }, loader ? "-=0.45" : 0);
     }
     tl.from("[data-intro]", { y: 30, opacity: 0, stagger: 0.12, duration: 1, ease: "power3.out" }, "-=0.8");
 
