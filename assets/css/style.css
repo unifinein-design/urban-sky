@@ -311,15 +311,13 @@ picture { display: contents; }
 }
 .hero__dust { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .hero__copy { position: relative; z-index: 3; padding-left: max(var(--gutter), calc((100vw - var(--max)) / 2)); padding-right: 24px; }
-.hero__copy { container-type: inline-size; }
-/* one line, scaled to the text column so it always sits beside the glass (the line is ~18x its font size wide) */
-.hero__title { font-size: clamp(24px, 2.3vw, 46px); letter-spacing: 0.02em; white-space: nowrap; }
-@supports (width: 1cqi) { .hero__title { font-size: clamp(18px, calc(100cqi / 18.1), 46px); } }
-.hero__title .word { display: inline-block; white-space: nowrap; }
-.hero__welcome { font-style: italic; font-weight: 500; font-size: 0.6em; letter-spacing: 0.01em; }
+.hero__welcome { font-family: var(--serif); font-style: italic; font-size: clamp(24px, 2.4vw, 34px); color: var(--gold-2); margin: 0 0 6px; }
+.hero__title { font-size: clamp(44px, 6.2vw, 108px); white-space: nowrap; }
 .hero__title .char { display: inline-block; will-change: transform, opacity; }
+.hero__sub { margin: 18px 0 0; font-family: var(--serif); font-weight: 500; letter-spacing: 0.55em; font-size: clamp(13px, 1.2vw, 17px); color: #d8ccb6; text-transform: uppercase; }
 .hero__rule { width: 120px; height: 1px; background: linear-gradient(90deg, var(--gold), transparent); margin: 34px 0 26px; transform-origin: left; }
-.hero__tag { font-family: var(--serif); font-size: clamp(21px, 2vw, 28px); line-height: 1.4; margin: 0 0 38px; color: #efe5d2; max-width: 30ch; }
+/* the tagline box is exactly as wide as its first line, so centring puts the second line in the middle under it */
+.hero__tag { font-family: var(--serif); font-size: clamp(21px, 2vw, 28px); line-height: 1.4; margin: 0 0 38px; color: #efe5d2; width: fit-content; max-width: 100%; text-align: center; }
 /* the Wix scene fills the hero, as on the Wix site. The frame keeps the photo's shape and covers the hero,
    anchored so the glass stays in view at every size; the pour film sits exactly over the glass and is masked,
    so only the pour moves and the rest is the sharp photo. */
@@ -379,14 +377,13 @@ picture { display: contents; }
 @media (max-width: 860px) and (max-aspect-ratio: 3/2), (max-aspect-ratio: 4/5) {
   .hero__stage { grid-template-columns: 1fr; grid-template-rows: auto 1fr; align-content: start; padding-top: 104px; }
   .hero__copy { padding: 0 var(--gutter); text-align: center; }
-  .hero__title { white-space: normal; font-size: clamp(24px, 6.6vw, 40px); text-wrap: balance; } /* too long for one line on a phone: two balanced lines */
   .hero__rule { margin: 22px auto 18px; }
   .hero__tag { margin: 0 auto 0; font-size: 19px; }
   .hero__cta { display: none; }
 }
 @media (max-height: 500px) and (min-aspect-ratio: 3/2) {
   .hero__stage { min-height: 0; padding-top: 56px; }
-  .hero__title { white-space: normal; font-size: clamp(20px, 3.4vw, 28px); text-wrap: balance; }
+  .hero__title { font-size: clamp(36px, 5.6vw, 64px); }
   .hero__rule { margin: 16px 0 14px; }
   .hero__tag { font-size: 17px; margin-bottom: 0; }
   .hero__cta { display: none; }
