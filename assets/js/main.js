@@ -193,10 +193,6 @@
         scrollTrigger: { trigger: group, start: "top 82%" },
       });
     });
-    // hero copy drifts and fades as the pour finishes
-    if (document.querySelector(".hero__copy")) {
-      gsap.to(".hero__scroll", { opacity: 0, scrollTrigger: { trigger: ".hero", start: "top top", end: "8% top", scrub: true } });
-    }
     // floating range shot
     if (document.querySelector(".brands__range img")) {
       gsap.to(".brands__range img", { y: -14, duration: 3.2, ease: "sine.inOut", yoyo: true, repeat: -1 });

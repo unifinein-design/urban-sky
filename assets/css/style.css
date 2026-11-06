@@ -348,16 +348,16 @@ picture { display: contents; }
 }
 .hero__crest {
   /* sits in the sky between the menu (84px) and the glass rim (29% down the photo), sized to fit that gap */
-  --band: calc(var(--ft) + 0.29 * var(--fh) - 84px);
+  --band: calc(var(--ft) + 0.29 * var(--fh) - 84px - var(--tick));
   --ch: clamp(48px, calc(0.74 * var(--band)), 100px);
   position: absolute; z-index: 2; height: var(--ch); width: auto;
-  left: 60%; top: calc(84px - var(--ft) + (var(--band) - var(--ch)) / 2); transform: translateX(-50%);
+  left: 60%; top: calc(84px + var(--tick) - var(--ft) + (var(--band) - var(--ch)) / 2); transform: translateX(-50%);
   opacity: 0; filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.6));
   transition: opacity 1.6s var(--ease);
 }
 .hero.is-full .hero__crest { opacity: 1; }
 /* short, wide windows: no sky left above the glass, so no crest */
-@media (min-aspect-ratio: 33/20) and (max-height: 700px), (max-height: 500px) { .hero__crest { display: none; } }
+@media (min-aspect-ratio: 33/20) and (max-height: 760px), (max-height: 500px) { .hero__crest { display: none; } }
 .hero__dust { z-index: 2; }
 .hero__stage::after {
   content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
@@ -370,29 +370,21 @@ picture { display: contents; }
   .hero__scene::after { background: radial-gradient(ellipse at 50% 55%, transparent 52%, rgba(6, 5, 4, 0.55) 100%); }
   .hero__frame { --z: 1; --k: 230; --gx: 50; --gy: 58; }
   .hero__crest { display: none; } /* the header crest is right above; here it would sit on the tagline */
-  .hero__scroll { color: #e6dccb; text-shadow: 0 1px 2px rgba(6, 5, 4, 0.95), 0 0 10px rgba(6, 5, 4, 0.9), 0 0 22px rgba(6, 5, 4, 0.8); }
 }
-.hero__scroll {
-  position: absolute; z-index: 4; left: 50%; bottom: 28px; transform: translateX(-50%);
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
-  font-size: 13.5px; font-weight: 600; letter-spacing: 0.36em; text-transform: uppercase; color: var(--muted); white-space: nowrap;
-}
-.hero__scroll i { width: 1px; height: 46px; background: linear-gradient(var(--gold), transparent); animation: drip 2.2s var(--ease) infinite; transform-origin: top; }
-@keyframes drip { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
 
 @media (max-width: 860px) and (max-aspect-ratio: 3/2), (max-aspect-ratio: 4/5) {
-  .hero__stage { grid-template-columns: 1fr; grid-template-rows: auto 1fr; align-content: start; padding-top: 104px; }
+  .hero__stage { grid-template-columns: 1fr; grid-template-rows: auto 1fr; align-content: start; padding-top: calc(104px + var(--tick)); }
   .hero__copy { padding: 0 var(--gutter); text-align: center; }
   .hero__rule { margin: 22px auto 18px; }
   .hero__tag { margin: 0 auto 0; font-size: 19px; }
   .hero__cta { display: none; }
 }
 @media (max-height: 500px) and (min-aspect-ratio: 3/2) {
-  .hero__stage { min-height: 0; padding-top: 56px; }
+  .hero__stage { min-height: 0; padding-top: calc(56px + var(--tick)); }
   .hero__title { font-size: clamp(36px, 5.6vw, 64px); }
   .hero__rule { margin: 16px 0 14px; }
   .hero__tag { font-size: 17px; margin-bottom: 0; }
-  .hero__cta, .hero__scroll { display: none; }
+  .hero__cta { display: none; }
   .hero__frame { --gy: 64; }
 }
 /* browsers without container units (Safari 15 and older): the still photo covers the hero, no pour */
@@ -403,10 +395,17 @@ picture { display: contents; }
 }
 
 /* ===== marquee ===== */
-.marquee { border-block: 1px solid var(--line); padding: 26px 0; overflow: hidden; background: var(--ink-2); }
-.marquee__track { display: flex; width: max-content; animation: marquee 38s linear infinite; will-change: transform; }
-.marquee span { font-family: var(--serif); font-style: italic; font-size: clamp(26px, 3vw, 40px); color: #d8ccb6; padding-right: 56px; white-space: nowrap; display: inline-flex; align-items: center; gap: 56px; }
-.marquee span::after { content: "✦"; font-style: normal; font-size: 0.5em; color: var(--gold); }
+/* a slim strip pinned at the very top of the home page, above the menu, moving from the first second */
+:root { --tick: 34px; }
+.marquee { height: var(--tick); display: flex; align-items: center; overflow: hidden; background: var(--ink-2); border-bottom: 1px solid var(--line); }
+.marquee__track { display: flex; width: max-content; animation: marquee 36s linear infinite; will-change: transform; }
+.marquee span { font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 16px; letter-spacing: 0.02em; color: #d8ccb6; padding-right: 30px; white-space: nowrap; display: inline-flex; align-items: center; gap: 30px; }
+.marquee span::after { content: "✦"; font-style: normal; font-size: 0.6em; color: var(--gold); }
+.nav--ticker { padding-top: 0; }
+.nav--ticker .marquee { margin-bottom: 22px; transition: margin 0.6s var(--ease); }
+.nav--ticker.is-scrolled { padding-top: 0; }
+.nav--ticker.is-scrolled .marquee { margin-bottom: 12px; }
+@media (max-width: 860px) { :root { --tick: 30px; } .marquee span { font-size: 14.5px; padding-right: 22px; gap: 22px; } }
 @keyframes marquee { to { transform: translateX(-50%); } }
 
 /* ===== sections ===== */
@@ -612,6 +611,6 @@ picture { display: contents; }
 @media (hover: none) { .cursor { display: none; } }
 
 @media (prefers-reduced-motion: reduce) {
-  body::after, .marquee__track, .gold-text, .hero__scroll i, .gate__glow { animation: none; }
+  body::after, .marquee__track, .gold-text, .gate__glow { animation: none; }
   .reveal { opacity: 1; transform: none; }
 }
