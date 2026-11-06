@@ -1,19 +1,9 @@
-/* Urban Sky - shared site behaviour ("Cellar Light" motion system)
-   Motion vocabulary, used everywhere so the site moves as one piece:
-   - words rise out of masks, line by line (expo.out, 1.25 s, 0.1 s between lines)
-   - photographs open with a clip-path wipe while the picture settles from a slight scale (power4.inOut 1.5 s / expo.out 2.2 s)
-   - supporting text and groups fade up 28 px (power3.out 1.1 s, 0.08-0.1 s stagger)
-   - scroll-linked depth: gentle parallax, the photograph bands opening to full bleed, a velocity-aware marquee
-   Nothing here runs with prefers-reduced-motion, and without GSAP the page is simply static and complete. */
+/* Urban Sky - shared site behaviour */
 (function () {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const hasGsap = typeof window.gsap !== "undefined";
   const root = document.documentElement;
-  const motion = !reduce && hasGsap && typeof window.ScrollTrigger !== "undefined";
-  const small = window.matchMedia("(max-width: 860px)").matches;
-  const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-  if (motion) window.__usMotion = true;
-  else { root.classList.add("no-motion"); root.classList.remove("motion"); }
+  if (reduce || !hasGsap) root.classList.add("no-motion");
 
   /* ---------- age gate ---------- */
   const gate = document.getElementById("gate");
@@ -57,11 +47,7 @@
 
   /* ---------- nav ---------- */
   const nav = document.querySelector(".nav");
-  const hero = document.querySelector(".hero");
-  const onScroll = () => {
-    if (nav) nav.classList.toggle("is-scrolled", window.scrollY > 40);
-    if (hero) hero.classList.toggle("is-past", window.scrollY > 60);
-  };
+  const onScroll = () => nav && nav.classList.toggle("is-scrolled", window.scrollY > 40);
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
   const toggle = document.querySelector(".nav__toggle");
@@ -73,9 +59,9 @@
   /* ---------- smooth scroll ---------- */
   let lenis;
   if (!reduce && window.Lenis) {
-    // lerp-based easing tracks the wheel closely, so it feels smooth without lag
-    lenis = new Lenis({ lerp: 0.1, smoothWheel: true, wheelMultiplier: 1 });
-    if (motion) {
+    // lerp-based easing tracks the wheel more closely than a long fixed duration, so it feels smooth without lag
+    lenis = new Lenis({ lerp: 0.11, smoothWheel: true, wheelMultiplier: 1 });
+    if (hasGsap && window.ScrollTrigger) {
       lenis.on("scroll", ScrollTrigger.update);
       gsap.ticker.add((t) => lenis.raf(t * 1000));
       gsap.ticker.lagSmoothing(0);
@@ -91,16 +77,12 @@
     else window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
   }));
 
-  /* ---------- warm light that follows the pointer, only over photographs ---------- */
+  /* ---------- cursor glow ---------- */
   const cursor = document.querySelector(".cursor");
-  if (cursor && motion && fine) {
-    const xTo = gsap.quickTo(cursor, "x", { duration: 0.9, ease: "power3" });
-    const yTo = gsap.quickTo(cursor, "y", { duration: 0.9, ease: "power3" });
-    window.addEventListener("pointermove", (e) => { xTo(e.clientX); yTo(e.clientY); }, { passive: true });
-    document.querySelectorAll("[data-glow]").forEach((el) => {
-      el.addEventListener("pointerenter", () => cursor.classList.add("is-on"));
-      el.addEventListener("pointerleave", () => cursor.classList.remove("is-on"));
-    });
+  if (cursor && hasGsap && !reduce) {
+    const xTo = gsap.quickTo(cursor, "x", { duration: 0.8, ease: "power3" });
+    const yTo = gsap.quickTo(cursor, "y", { duration: 0.8, ease: "power3" });
+    window.addEventListener("pointermove", (e) => { xTo(e.clientX); yTo(e.clientY); });
   }
 
   /* ---------- bottle card spotlight ---------- */
@@ -146,7 +128,7 @@
     });
   }
 
-  /* ---------- text splitting (motion only; the words themselves never change) ---------- */
+  /* ---------- page intro + scroll animations ---------- */
   function splitChars(el) {
     const text = el.textContent;
     // transformed children drop out of a parent's background-clip:text, so each char carries the gold itself
@@ -158,76 +140,11 @@
       const s = document.createElement("span");
       s.className = gold ? "char gold-text" : "char";
       s.setAttribute("aria-hidden", "true");
-      s.textContent = ch === " " ? "\u00a0" : ch;
+      s.textContent = ch === " " ? " " : ch;
       el.appendChild(s);
     }
     return el.querySelectorAll(".char");
   }
-  // every word goes into its own mask; inline markup (em, strong, gold spans) is kept around the words
-  function maskWords(el) {
-    if (el.__words) return el.__words;
-    if (el.classList.contains("eyebrow")) {           // the eyebrow is a flex row: keep its words in one item
-      const t = document.createElement("span");
-      while (el.firstChild) t.appendChild(el.firstChild);
-      el.appendChild(t);
-    }
-    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-    const texts = [];
-    let n;
-    while ((n = walker.nextNode())) texts.push(n);
-    texts.forEach((node) => {
-      if (!node.nodeValue.trim()) return;
-      const gold = node.parentElement && node.parentElement.closest(".gold-text");
-      const frag = document.createDocumentFragment();
-      node.nodeValue.split(/(\s+)/).forEach((part) => {
-        if (!part) return;
-        if (!part.trim()) { frag.appendChild(document.createTextNode(part)); return; }
-        const m = document.createElement("span");
-        m.className = "wm";
-        const i = document.createElement("span");
-        i.className = gold ? "wi gold-text" : "wi";
-        i.textContent = part;
-        m.appendChild(i);
-        frag.appendChild(m);
-      });
-      node.parentNode.replaceChild(frag, node);
-    });
-    el.querySelectorAll(".gold-text:not(.wi)").forEach((g) => g.classList.remove("gold-text"));
-    // group words into their rendered lines, so a heading rises line by line
-    const words = [...el.querySelectorAll(".wi")];
-    let lastTop = null, line = -1;
-    words.forEach((w) => {
-      const t = w.parentNode.getBoundingClientRect().top;
-      if (lastTop === null || Math.abs(t - lastTop) > 6) { line++; lastTop = t; }
-      w.__line = line;
-    });
-    el.__words = words;
-    return words;
-  }
-  // a timeline that lifts the words of one element out of their masks, line after line
-  function riseWords(el, opts) {
-    const o = Object.assign({ dur: 1.25, gap: 0.1, ease: "expo.out", tilt: 3 }, opts || {});
-    const words = maskWords(el);
-    gsap.set(el, { opacity: 1 });
-    const tl = gsap.timeline();
-    words.forEach((w) => {
-      tl.fromTo(w, { yPercent: 118, rotate: o.tilt, transformOrigin: "0% 100%" },
-        { yPercent: 0, rotate: 0, duration: o.dur, ease: o.ease }, w.__line * o.gap);
-    });
-    if (el.classList.contains("eyebrow")) tl.fromTo(el, { "--rule": 0 }, { "--rule": 1, duration: 1.1, ease: "power3.inOut" }, 0);
-    return tl;
-  }
-  const fadeUp = (el, extra) => gsap.fromTo(el, { opacity: 0, y: 28 }, Object.assign({ opacity: 1, y: 0, duration: 1.1, ease: "power3.out" }, extra || {}));
-  // a photograph opening: the frame wipes up while the picture inside settles from a slight scale
-  function openPhoto(box, pic, extra) {
-    const o = Object.assign({ from: "inset(100% 0% 0% 0%)", dur: 1.5, scale: 1.2 }, extra || {});
-    const tl = gsap.timeline();
-    tl.fromTo(box, { clipPath: o.from }, { clipPath: "inset(0% 0% 0% 0%)", duration: o.dur, ease: "power4.inOut" }, 0);
-    // pictures with no other transform hand back to CSS afterwards, so their hover zoom works
-    if (pic) tl.fromTo(pic, { scale: o.scale }, Object.assign({ scale: 1, duration: o.dur + 0.8, ease: "expo.out" }, o.keepScale ? {} : { clearProps: "transform" }), 0);
-    return tl;
-  }
-  const onEnter = (trigger, tl, start) => ScrollTrigger.create({ trigger, start: start || "top 88%", once: true, onEnter: () => tl.play() });
 
   let started = false;
   function start() {
@@ -235,239 +152,55 @@
     started = true;
     window.__usStarted = true;
     window.dispatchEvent(new Event("pour:intro"));
-    if (!motion) return;
+    if (!hasGsap || reduce) return;
     gsap.registerPlugin(ScrollTrigger);
-    const handled = new Set();
 
-    /* ===== intro: home ===== */
-    if (hero) {
-      const scene = hero.querySelector(".hero__scene");
-      const copy = hero.querySelector(".hero__copy");
-      const title = hero.querySelector("[data-split]");
-      const tl = gsap.timeline({ delay: 0.05 });
-      // the pool of light comes up and settles gently onto the glass; at rest nothing is cropped or moved
-      if (scene) tl.fromTo(scene, { opacity: 0, scale: 1.04, transformOrigin: small ? "50% 70%" : "72% 52%" },
-        { opacity: 1, scale: 1, duration: 2.2, ease: "power3.out", clearProps: "transform" }, 0);
-      if (title) {
-        const chars = splitChars(title);
-        title.classList.add("is-split");
-        tl.set(title, { opacity: 1 }, 0.75)
-          .fromTo(chars, { yPercent: 112 }, { yPercent: 0, duration: 1.4, stagger: 0.055, ease: "expo.out" }, 0.75);
-      }
-      hero.querySelectorAll("[data-intro]").forEach((el) => {
-        const at = { hero__welcome: 0.6, hero__sub: 1.15, hero__rule: 1.3, hero__tag: 1.35, hero__cta: 1.65 }[el.classList[0]] || 1.2;
-        if (el.classList.contains("hero__rule")) tl.fromTo(el, { opacity: 1, scaleX: 0 }, { scaleX: 1, duration: 1.3, ease: "power3.inOut" }, at);
-        else if (el.querySelector(".btn")) tl.fromTo(el, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" }, at);
-        else tl.add(riseWords(el, { gap: 0.09 }), at);
+    const loader = document.querySelector(".loader");
+    const tl = gsap.timeline();
+    if (loader) {
+      tl.to(".loader__crest", { opacity: 1, duration: 0.6, ease: "power2.out" })
+        .to(".loader__bar i", { scaleX: 1, duration: 0.9, ease: "power2.inOut" }, "<")
+        .to(loader, { yPercent: -100, duration: 1, ease: "expo.inOut" }, "+=0.1")
+        .set(loader, { display: "none" });
+    }
+
+    const title = document.querySelector("[data-split]");
+    if (title) {
+      const chars = splitChars(title);
+      tl.from(chars, { yPercent: 110, opacity: 0, rotateX: -80, stagger: 0.045, duration: 1.1, ease: "expo.out" }, loader ? "-=0.45" : 0);
+    }
+    tl.from("[data-intro]", { y: 30, opacity: 0, stagger: 0.12, duration: 1, ease: "power3.out" }, "-=0.8");
+
+    // reveals
+    gsap.utils.toArray(".reveal").forEach((el) => {
+      gsap.to(el, {
+        opacity: 1, y: 0, duration: 1.2, ease: "power3.out",
+        scrollTrigger: { trigger: el, start: "top 86%" },
       });
-      const scrollCue = hero.querySelector(".hero__scroll");
-      if (scrollCue) tl.fromTo(scrollCue, { opacity: 0 }, { opacity: 1, duration: 1.2, ease: "power2.out", clearProps: "opacity" }, 2.0);
-      if (nav) tl.fromTo(nav, { opacity: 0, y: -18 }, { opacity: 1, y: 0, duration: 1.2, ease: "expo.out", clearProps: "transform,opacity" }, 1.0);
-
-      // scroll-linked depth (the film itself never follows the scroll): the words lift away and fade a little
-      if (!small) gsap.to(copy, { y: () => -hero.offsetHeight * 0.12, opacity: 0.15, ease: "none",
-        scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true, invalidateOnRefresh: true } });
-    }
-
-    /* ===== intro: inner pages ===== */
-    const phero = document.querySelector(".phero");
-    if (phero) {
-      const tl = gsap.timeline({ delay: 0.05 });
-      phero.querySelectorAll("[data-intro]").forEach((el, i) => tl.add(riseWords(el, { dur: 1.35, gap: 0.12 }), 0.1 + i * 0.18));
-      tl.add(openPhoto(phero.querySelector(".phero__media"), phero.querySelector(".phero__img"), { dur: 1.7, scale: 1.24, keepScale: true }), 0.35);
-    }
-
-    /* ===== section entrances ===== */
-    // headings, eyebrows and quotes: masked words, line by line
-    gsap.utils.toArray("main .reveal").forEach((el) => {
-      if (handled.has(el)) return;
-      if (el.matches(".eyebrow, h2, h3, .band__quote")) {
-        handled.add(el);
-        const tl = riseWords(el).pause();
-        onEnter(el, tl);
-      }
     });
-    // the Goalong splash print: rises with its mat and is never cropped (no clip, no zoom on the photograph)
-    document.querySelectorAll(".story__media--still").forEach((el) => {
-      handled.add(el);
-      const tl = gsap.timeline({ paused: true })
-        .fromTo(el, { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 1.6, ease: "expo.out" }, 0)
-        .fromTo(el.querySelector(".story__clip"), { scale: 0.94 }, { scale: 1, duration: 1.8, ease: "expo.out" }, 0)
-        .fromTo(el.querySelector(".story__frame"), { clipPath: "inset(0% 100% 100% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.6, ease: "power3.inOut" }, 0.5);
-      onEnter(el, tl, "top 85%");
-    });
-    // other story photographs: clip-path wipe with the picture settling
-    document.querySelectorAll(".story__media:not(.story__media--still)").forEach((el) => {
-      handled.add(el);
-      gsap.set(el, { opacity: 1 });
-      const tl = gsap.timeline({ paused: true })
-        .add(openPhoto(el.querySelector(".story__clip"), el.querySelector(".story__clip img"), { keepScale: true }), 0)
-        .fromTo(el.querySelector(".story__frame"), { clipPath: "inset(0% 100% 100% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.6, ease: "power3.inOut" }, 0.6);
-      onEnter(el, tl, "top 85%");
-    });
-    // the Goalong range: rises onto its floor, then floats gently (only while on screen)
-    document.querySelectorAll(".brands__range").forEach((el) => {
-      handled.add(el);
-      const img = el.querySelector("img");
-      const tl = gsap.timeline({ paused: true })
-        .fromTo(el, { opacity: 0, y: 70 }, { opacity: 1, y: 0, duration: 1.6, ease: "expo.out" }, 0)
-        .fromTo(img, { scale: 0.95 }, { scale: 1, duration: 1.8, ease: "expo.out" }, 0)
-        .fromTo(el.querySelector(".brands__floor"), { scaleX: 0 }, { scaleX: 1, duration: 1.6, ease: "power3.inOut" }, 0.3);
-      onEnter(el, tl);
-      const float = gsap.to(img, { y: -12, duration: 3.4, ease: "sine.inOut", yoyo: true, repeat: -1, paused: true });
-      ScrollTrigger.create({ trigger: el, start: "top bottom", end: "bottom top", onToggle: (s) => (s.isActive ? float.play() : float.pause()) });
-    });
-    // the Royal Carlston banner: the frame rises, the photograph wipes across
-    document.querySelectorAll(".whisky").forEach((el) => {
-      handled.add(el);
-      const tl = gsap.timeline({ paused: true })
-        .fromTo(el, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" }, 0)
-        .add(openPhoto(el.querySelector(".whisky__img"), el.querySelector(".whisky__img img"), { from: "inset(0% 100% 0% 0%)", dur: 1.6, scale: 1.15 }), 0.15);
-      onEnter(el, tl);
-    });
-    // crests and logos
-    gsap.utils.toArray("main img.reveal").forEach((el) => {
-      handled.add(el);
-      onEnter(el, gsap.fromTo(el, { opacity: 0, y: 26, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 1.5, ease: "expo.out", paused: true }));
-    });
-    // everything else marked to reveal: a quiet fade up
-    gsap.utils.toArray("main .reveal").forEach((el) => {
-      if (handled.has(el)) return;
-      onEnter(el, fadeUp(el, { paused: true }));
-    });
-
-    // vision and mission prints: photograph opens, then the caption follows
-    document.querySelectorAll(".vm__card").forEach((card, i) => {
-      const tl = gsap.timeline({ paused: true, delay: small ? 0 : i * 0.14 })
-        .add(openPhoto(card.querySelector(".vm__media"), card.querySelector(".vm__media img")), 0)
-        .fromTo(card.querySelector(".vm__num"), { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 1.1, ease: "back.out(1.6)" }, 0.7)
-        .add(riseWords(card.querySelector("h3")), 0.75)
-        .add(fadeUp(card.querySelector("p")), 0.95);
-      onEnter(card, tl, "top 86%");
-    });
-    // the three story notes, the bottles and the contact lines: staggered entrances
-    document.querySelectorAll(".story__stats").forEach((g) => {
-      const items = g.children;
-      const tl = gsap.timeline({ paused: true })
-        .fromTo(items, { "--rule": 0 }, { "--rule": 1, duration: 1.2, stagger: 0.12, ease: "power3.inOut" }, 0)
-        .fromTo(items, { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 1.1, stagger: 0.12, ease: "power3.out" }, 0.15);
-      onEnter(g, tl);
-    });
-    document.querySelectorAll(".bottles").forEach((g) => {
-      const cards = g.querySelectorAll(".bottle");
-      const tl = gsap.timeline({ paused: true })
-        .fromTo(cards, { opacity: 0, y: 70 }, { opacity: 1, y: 0, duration: 1.3, stagger: 0.09, ease: "expo.out" }, 0)
-        .fromTo(g.querySelectorAll(".bottle img"), { y: 34, opacity: 0 }, { y: 0, opacity: 1, duration: 1.4, stagger: 0.09, ease: "expo.out" }, 0.2);
-      onEnter(g, tl);
-    });
-    document.querySelectorAll(".contact__lines").forEach((g) => {
-      onEnter(g, gsap.fromTo(g.children, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 1.1, stagger: 0.1, ease: "power3.out", paused: true }));
-    });
-
-    // call to action photograph opens beside the words
-    document.querySelectorAll(".contact__media").forEach((el) => {
-      onEnter(el, openPhoto(el, el.querySelector(".contact__bg"), { dur: 1.7, keepScale: true }).pause(), "top 80%");
-    });
-
-    /* ===== scroll-linked depth ===== */
+    // parallax images
     gsap.utils.toArray("[data-parallax]").forEach((el) => {
-      const amt = (parseFloat(el.dataset.parallax) || 12) * (small ? 0.6 : 1);
-      const box = el.closest(".phero__media, .contact__media, .story__clip") || el.parentElement;
+      const amt = parseFloat(el.dataset.parallax) || 12;
       gsap.fromTo(el, { yPercent: -amt }, {
         yPercent: amt, ease: "none",
-        scrollTrigger: { trigger: box, start: "top bottom", end: "bottom top", scrub: true },
+        scrollTrigger: { trigger: el.parentElement, start: "top bottom", end: "bottom top", scrub: true },
       });
     });
-    // photograph bands hang inset like prints, then open to full bleed as they rise (desktop)
-    document.querySelectorAll(".band").forEach((band) => {
-      const inner = band.querySelector(".band__inner");
-      if (!small) {
-        gsap.fromTo(band, { clipPath: "inset(9% 7% 9% 7%)" }, { clipPath: "inset(0% 0% 0% 0%)", ease: "none",
-          scrollTrigger: { trigger: band, start: "top bottom", end: "top 10%", scrub: 0.6 } });
-        gsap.fromTo(inner, { y: 60 }, { y: -60, ease: "none", scrollTrigger: { trigger: band, start: "top bottom", end: "bottom top", scrub: true } });
-      }
-    });
-    // the story print drifts a little against its text (desktop)
-    if (!small) document.querySelectorAll(".story__media").forEach((el) => {
-      gsap.fromTo(el.querySelector(".story__clip"), { y: 36 }, { y: -36, ease: "none",
-        scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: true } });
-    });
-    // marquee: runs with the reader, speeding up with the scroll and turning when they scroll back
-    const track = document.querySelector(".marquee__track");
-    if (track) {
-      const loop = gsap.to(track, { xPercent: -50, duration: 38, ease: "none", repeat: -1 });
-      loop.totalTime(38 * 50);                     // far from zero, so it can also run backwards
-      let dir = 1;
-      ScrollTrigger.create({
-        trigger: ".marquee", start: "top bottom", end: "bottom top",
-        onToggle: (s) => (s.isActive ? loop.resume() : loop.pause()),
-        onUpdate: (s) => {
-          dir = s.direction;
-          const boost = Math.min(Math.abs(s.getVelocity()) / 320, 5);
-          gsap.to(loop, { timeScale: dir * (1 + boost), duration: 0.3, overwrite: true,
-            onComplete: () => gsap.to(loop, { timeScale: dir, duration: 1.4, ease: "power2.out", overwrite: true }) });
-        },
+    // staggered groups
+    gsap.utils.toArray("[data-stagger]").forEach((group) => {
+      gsap.from(group.children, {
+        y: 60, opacity: 0, duration: 1.1, stagger: 0.1, ease: "power3.out",
+        scrollTrigger: { trigger: group, start: "top 82%" },
       });
+    });
+    // hero copy drifts and fades as the pour finishes
+    if (document.querySelector(".hero__copy")) {
+      gsap.to(".hero__scroll", { opacity: 0, scrollTrigger: { trigger: ".hero", start: "top top", end: "8% top", scrub: true } });
     }
-    // reading progress: a gold hairline along the bottom of the bar
-    if (nav) {
-      const bar = document.createElement("span");
-      bar.className = "nav__progress";
-      bar.setAttribute("aria-hidden", "true");
-      nav.appendChild(bar);
-      const setP = gsap.quickSetter(bar, "scaleX");
-      ScrollTrigger.create({ start: 0, end: "max", onUpdate: (s) => setP(s.progress) });
+    // floating range shot
+    if (document.querySelector(".brands__range img")) {
+      gsap.to(".brands__range img", { y: -14, duration: 3.2, ease: "sine.inOut", yoyo: true, repeat: -1 });
     }
-
-    /* ===== pointer details (mouse and trackpad only) ===== */
-    if (fine) {
-      // magnetic buttons: they lean towards the pointer and settle back when it leaves
-      document.querySelectorAll("main .btn, .nav .btn, .footer .to-top").forEach((b) => {
-        const xTo = gsap.quickTo(b, "x", { duration: 0.6, ease: "power3" });
-        const yTo = gsap.quickTo(b, "y", { duration: 0.6, ease: "power3" });
-        b.addEventListener("pointermove", (e) => {
-          const r = b.getBoundingClientRect();
-          xTo((e.clientX - (r.left + r.width / 2)) * 0.22);
-          yTo((e.clientY - (r.top + r.height / 2)) * 0.32);
-        });
-        b.addEventListener("pointerleave", () => { xTo(0); yTo(0); });
-      });
-      // bottle cards tilt a few degrees under the pointer; the bottle lifts
-      document.querySelectorAll(".bottle").forEach((card) => {
-        const img = card.querySelector("img");
-        const rx = gsap.quickTo(card, "rotationX", { duration: 0.8, ease: "power3" });
-        const ry = gsap.quickTo(card, "rotationY", { duration: 0.8, ease: "power3" });
-        const lift = gsap.quickTo(img, "y", { duration: 0.8, ease: "power3" });
-        card.addEventListener("pointermove", (e) => {
-          const r = card.getBoundingClientRect();
-          const px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
-          ry(px * 7); rx(-py * 6); lift(-10);
-        });
-        card.addEventListener("pointerleave", () => { rx(0); ry(0); lift(0); });
-      });
-    }
-
-    /* ===== page change: an espresso veil draws up before the next page ===== */
-    const veil = document.createElement("div");
-    veil.className = "veil";
-    veil.setAttribute("aria-hidden", "true");
-    document.body.appendChild(veil);
-    document.addEventListener("click", (e) => {
-      const a = e.target.closest && e.target.closest("a[href]");
-      if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      if (a.target && a.target !== "_self") return;
-      if (a.hasAttribute("download")) return;
-      const url = new URL(a.href, location.href);
-      if (url.origin !== location.origin || !/(\.html|\/)$/.test(url.pathname)) return;
-      if (url.pathname === location.pathname && url.hash) return;
-      e.preventDefault();
-      if (nav) nav.classList.remove("is-open");
-      gsap.fromTo(veil, { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.6, ease: "power3.inOut", onComplete: () => { window.location.href = url.href; } });
-    });
-    window.addEventListener("pageshow", (e) => { if (e.persisted) gsap.set(veil, { clipPath: "inset(100% 0% 0% 0%)" }); });
-
-    // pictures that arrive late change the page height; keep every trigger honest
-    window.addEventListener("load", () => ScrollTrigger.refresh());
   }
 
   if (!gate || gate.hidden) start();
@@ -531,19 +264,19 @@
   }
 
   // gold dust: slow, soft, drifting upward through the hero
-  const gold = sprite("rgba(255,242,206,1)", "rgba(236,196,118,0.55)");
+  const gold = sprite("rgba(255,240,200,1)", "rgba(233,190,110,0.55)");
   field(document.querySelector(".hero__dust"), {
-    count: small ? 22 : 46, glow: gold, glowBig: gold,
+    count: small ? 34 : 60, glow: gold, glowBig: gold,
     spawn(p, first) {
       p.x = Math.random(); p.y = first ? Math.random() : 1.03;
-      p.r = 2.5 + Math.random() * 4.5; p.s = 0.00022 + Math.random() * 0.0005;
+      p.r = 3 + Math.random() * 5; p.s = 0.00025 + Math.random() * 0.0006;
       p.o = Math.random() * 6.28; p.dead = false; p.a = 0;
       return p;
     },
     step(p, dt, t) {
       p.y -= p.s * dt;
       p.x += Math.sin(t / 3800 + p.o) * 0.00012 * dt;
-      p.a = 0.16 + (Math.sin(t / 900 + p.o) + 1) * 0.18;
+      p.a = 0.18 + (Math.sin(t / 900 + p.o) + 1) * 0.2;
       if (p.y < -0.03) p.dead = true;
     },
   });
