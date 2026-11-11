@@ -527,7 +527,7 @@ picture { display: contents; }
 .brands__sub + .bottles { margin-top: clamp(40px, 5vw, 64px); }
 .brands__note { margin: 26px auto 0; max-width: 46ch; font-family: var(--serif); font-size: clamp(19px, 1.6vw, 23px); line-height: 1.5; color: #ddd3c0; }
 /* a short row keeps the same card width and sits in the middle */
-.bottles--few { grid-template-columns: repeat(3, calc((100% - 72px) / 5)); justify-content: center; }
+.bottles--few { grid-template-columns: repeat(4, calc((100% - 72px) / 5)); justify-content: center; }
 @media (max-width: 1060px) { .bottles, .bottles--few { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 640px) {
   .bottles, .bottles--few { grid-template-columns: repeat(2, 1fr); gap: 12px; }
