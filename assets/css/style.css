@@ -426,9 +426,21 @@ picture { display: contents; }
 .story__stats > div::before { content: "0" counter(stat); display: block; font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--gold); margin-bottom: 10px; }
 .story__stats b { display: block; font-family: var(--serif); font-weight: 600; font-size: 18px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-2); }
 .story__stats span { font-size: 16.5px; color: #c9bea9; line-height: 1.55; display: block; margin-top: 8px; }
+/* a square photo (the range on the bar) keeps its whole frame */
+.story__media--square { aspect-ratio: 1 / 1; }
+/* mirrored story: photo on the right, frame offset to the left */
+.story--flip { grid-template-columns: 1fr 1.05fr; }
+.story--flip .story__media { order: 2; }
+.story--flip .story__frame { inset: 22px 22px -22px -22px; }
+/* Finnland Distilleries, authorised reseller */
+.finn__logo { width: clamp(200px, 22vw, 300px); margin: 34px 0 6px; filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.55)); }
+.finn__cta { margin-top: 40px; }
 @media (max-width: 860px) {
   .story { grid-template-columns: 1fr; }
-  .story__frame { inset: 14px -10px -14px 10px; }
+  .story__frame, .story--flip .story__frame { inset: 14px -10px -14px 10px; }
+  .story--flip .story__media { order: 0; }
+  .finn__logo { margin-left: auto; margin-right: auto; }
+  .finn .story__copy { text-align: center; }
   .story__stats { grid-template-columns: 1fr; }
 }
 
@@ -510,9 +522,15 @@ picture { display: contents; }
 .bottle:hover img { transform: translateY(-6px) scale(1.04) rotate(-2deg); }
 .bottle h4 { font-family: var(--serif); font-weight: 500; font-size: clamp(19px, 1.6vw, 23px); line-height: 1.2; margin: 70px 0 6px; }
 .bottle span { font-size: 12.5px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); }
-@media (max-width: 1060px) { .bottles { grid-template-columns: repeat(3, 1fr); } }
+/* further groups on the brands page (Finnland, more spirits) */
+.brands__sub { margin-top: clamp(100px, 12vw, 160px); scroll-margin-top: 110px; } /* the jump from the home page lands below the fixed menu */
+.brands__sub + .bottles { margin-top: clamp(40px, 5vw, 64px); }
+.brands__note { margin: 26px auto 0; max-width: 46ch; font-family: var(--serif); font-size: clamp(19px, 1.6vw, 23px); line-height: 1.5; color: #ddd3c0; }
+/* a short row keeps the same card width and sits in the middle */
+.bottles--few { grid-template-columns: repeat(3, calc((100% - 72px) / 5)); justify-content: center; }
+@media (max-width: 1060px) { .bottles, .bottles--few { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 640px) {
-  .bottles { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .bottles, .bottles--few { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .bottle { padding: 30px 10px 22px; }
   .bottle img { height: 180px; }
   .bottle h4 { margin-top: 52px; font-size: 19px; }
