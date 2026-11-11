@@ -666,6 +666,8 @@ html.motion .bottle:not(.is-in) { transition: box-shadow 0.8s var(--ease); }
 .phero .wrap { position: relative; z-index: 2; }
 .phero h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(54px, 9vw, 140px); line-height: 0.95; margin: 18px 0 0; }
 .phero h1 em { font-style: italic; color: var(--gold-2); }
+/* About header: on narrow screens show the copper stills and lamps, so the Urban Sky sign never crowds the menu icon */
+@media (max-width: 700px) { .phero--about .phero__img { background-position: 16% 0% !important; } }
 
 /* cta */
 .cta { text-align: center; }
