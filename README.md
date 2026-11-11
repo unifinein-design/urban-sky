@@ -35,7 +35,8 @@ Then open http://localhost:4500
 - Age gate flames: Pexels video 5659678, used under the Pexels licence (free for commercial use, no attribution required).
 - Bottle and brand imagery: from the original Urban Sky Wix site.
 - Goalong range lineup: from the full-size Wix original, JPEG blocking cleaned, upscaled 4x with Real-ESRGAN and blended so no label lettering is changed; served at 2000 and 1200 px.
-- Home page Goalong splash photo: supplied by Urban Sky; the corner brand text was removed, the image upscaled 4x and the label lettering rebuilt from the same artwork.
+- Goalong splash photo (kept in `assets/img/goalong-splash.*`, not shown on the site since the Our Story photo changed): supplied by Urban Sky; the corner brand text was removed, the image upscaled 4x and the label lettering rebuilt from the same artwork.
+- Our Story photo (`story-range`), the Finnland arrack range photo (`finnland-range`), the Finnland Distilleries logo and the single-bottle photos: supplied by Urban Sky. The bottles (`bottle-finsbury`, `bottle-don-rocket`, `bottle-cagura`, `bottle-soora-750`, `bottle-soora-180`, `bottle-special-arrack`, `bottle-green-apple`, `bottle-best-value`) were cut out of their photos with macOS subject lifting (Vision), the logo lifted off its navy background, all served at even pixel sizes with AVIF copies.
 
 ## AVIF note
 Encode AVIFs only at even pixel sizes: on this Mac's encoder, odd widths or heights produced files that Chrome drew as fully transparent.
