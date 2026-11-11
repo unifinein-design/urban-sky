@@ -4,6 +4,56 @@
   const hasGsap = typeof window.gsap !== "undefined";
   const root = document.documentElement;
   if (reduce || !hasGsap) root.classList.add("no-motion");
+  else root.classList.add("motion");
+
+  /* ---------- section tones: the atmosphere takes the colour of the section in the middle of the screen ---------- */
+  const toned = [...document.querySelectorAll("[data-tone]")];
+  if (toned.length) {
+    let toneTick = false;
+    const setTone = () => {
+      toneTick = false;
+      const mid = window.innerHeight * 0.5;
+      let tone = toned[0].dataset.tone;
+      // document order, so a group inside a section (Finnland inside Brands) wins while it is in view
+      for (const el of toned) if (el.getBoundingClientRect().top <= mid) tone = el.dataset.tone;
+      if (root.dataset.tone !== tone) root.dataset.tone = tone;
+    };
+    window.addEventListener("scroll", () => { if (!toneTick) { toneTick = true; requestAnimationFrame(setTone); } }, { passive: true });
+    window.addEventListener("resize", setTone);
+    setTone();
+  }
+
+  /* ---------- reading line + page veil ---------- */
+  if (!reduce) {
+    const bar = document.createElement("div");
+    bar.className = "progress"; bar.setAttribute("aria-hidden", "true");
+    document.body.appendChild(bar);
+    let progTick = false;
+    const prog = () => {
+      progTick = false;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.transform = `scaleX(${max > 0 ? Math.min(1, window.scrollY / max) : 0})`;
+    };
+    window.addEventListener("scroll", () => { if (!progTick) { progTick = true; requestAnimationFrame(prog); } }, { passive: true });
+    window.addEventListener("resize", prog);
+    prog();
+
+    // moving to another page: the page fades into the night first
+    const veil = document.createElement("div");
+    veil.className = "veil"; veil.setAttribute("aria-hidden", "true");
+    document.body.appendChild(veil);
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest && e.target.closest("a[href]");
+      if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === "_blank" || a.hasAttribute("download")) return;
+      const url = new URL(a.getAttribute("href"), window.location.href);
+      if (url.origin !== window.location.origin || url.protocol.indexOf("http") !== 0) return;
+      if (url.pathname === window.location.pathname) return; // same-page anchors and the skip link
+      e.preventDefault();
+      root.classList.add("is-leaving");
+      setTimeout(() => { window.location.href = url.href; }, 380);
+    });
+    window.addEventListener("pageshow", () => root.classList.remove("is-leaving"));
+  }
 
   /* ---------- age gate ---------- */
   const gate = document.getElementById("gate");
@@ -85,13 +135,20 @@
     window.addEventListener("pointermove", (e) => { xTo(e.clientX); yTo(e.clientY); });
   }
 
-  /* ---------- bottle card spotlight ---------- */
+  /* ---------- bottle cards: spotlight follows the pointer and the card leans toward it ---------- */
+  const tilt = !reduce && window.matchMedia("(hover: hover)").matches;
   document.querySelectorAll(".bottle").forEach((el) => {
     el.addEventListener("pointermove", (e) => {
       const r = el.getBoundingClientRect();
-      el.style.setProperty("--mx", ((e.clientX - r.left) / r.width) * 100 + "%");
-      el.style.setProperty("--my", ((e.clientY - r.top) / r.height) * 100 + "%");
+      const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+      el.style.setProperty("--mx", px * 100 + "%");
+      el.style.setProperty("--my", py * 100 + "%");
+      if (tilt) {
+        el.style.setProperty("--ry", ((px - 0.5) * 10).toFixed(2) + "deg");
+        el.style.setProperty("--rx", ((0.5 - py) * 8).toFixed(2) + "deg");
+      }
     });
+    if (tilt) el.addEventListener("pointerleave", () => { el.style.setProperty("--rx", "0deg"); el.style.setProperty("--ry", "0deg"); });
   });
 
   /* ---------- contact form -> email ---------- */
@@ -146,6 +203,34 @@
     return el.querySelectorAll(".char");
   }
 
+  // headings rise word by word: each word sits in a clipping span; gold words carry the gold themselves
+  function splitWords(el) {
+    const words = [];
+    const walk = (node, gold) => {
+      [...node.childNodes].forEach((n) => {
+        if (n.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach((part) => {
+            if (!part) return;
+            if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(" ")); return; }
+            const w = document.createElement("span"), wi = document.createElement("span");
+            w.className = "w"; wi.className = gold ? "wi gold-text" : "wi"; wi.textContent = part;
+            w.appendChild(wi); frag.appendChild(w); words.push(wi);
+          });
+          n.replaceWith(frag);
+        } else if (n.nodeType === 1 && n.tagName !== "BR") {
+          const g = gold || n.classList.contains("gold-text");
+          n.classList.remove("gold-text");
+          walk(n, g);
+        }
+      });
+    };
+    const gold = el.classList.contains("gold-text");
+    el.classList.remove("gold-text");
+    walk(el, gold);
+    return words;
+  }
+
   let started = false;
   function start() {
     if (started) return;
@@ -171,10 +256,50 @@
     }
     tl.from("[data-intro]", { y: 30, opacity: 0, stagger: 0.12, duration: 1, ease: "power3.out" }, "-=0.8");
 
-    // reveals
+    // eyebrows that arrive with the page draw their gold line straight away
+    document.querySelectorAll(".eyebrow[data-intro]").forEach((el) => el.classList.add("is-in"));
+
+    // headings rise word by word from behind a mask
+    gsap.utils.toArray(".h-serif.reveal, .cta h2.reveal, .band__quote.reveal, .story__copy h3.reveal").forEach((el) => {
+      const words = splitWords(el);
+      el.classList.remove("reveal");
+      gsap.from(words, {
+        yPercent: 118, rotate: 3, duration: 1.4, stagger: 0.07, ease: "expo.out",
+        scrollTrigger: { trigger: el, start: "top 88%" },
+      });
+    });
+
+    // story photos open from a narrow window, the picture settles, then the gold frame steps out behind it
+    gsap.utils.toArray(".story__fig").forEach((fig) => {
+      const media = fig.querySelector(".story__media"), img = media.querySelector("img"), frame = fig.querySelector(".story__frame");
+      media.classList.remove("reveal");
+      const t = gsap.timeline({ scrollTrigger: { trigger: fig, start: "top 82%" } });
+      t.fromTo(media, { clipPath: "inset(16% 12% 16% 12%)" }, {
+        clipPath: "inset(0% 0% 0% 0%)", duration: 1.7, ease: "expo.out",
+        onComplete: () => gsap.set(media, { clearProps: "clipPath" }), // the amber glow can show once it is open
+      });
+      if (img) t.from(img, { scale: 1.22, duration: 2.2, ease: "expo.out" }, 0);
+      if (frame) t.from(frame, { opacity: 0, x: -22, y: -22, duration: 1.4, ease: "expo.out" }, 0.35);
+    });
+
+    // wide pictures (the whisky banner, the Goalong range) open the same way
+    gsap.utils.toArray(".whisky.reveal, .brands__range.reveal").forEach((el) => {
+      el.classList.remove("reveal");
+      gsap.fromTo(el, { clipPath: "inset(12% 8% 12% 8%)", opacity: 0.3 }, {
+        clipPath: "inset(0% 0% 0% 0%)", opacity: 1, duration: 1.7, ease: "expo.out", clearProps: "clipPath",
+        scrollTrigger: { trigger: el, start: "top 86%" },
+      });
+    });
+
+    // the gold line beside each eyebrow draws in as it arrives
+    gsap.utils.toArray(".eyebrow.reveal").forEach((el) => ScrollTrigger.create({
+      trigger: el, start: "top 90%", once: true, onEnter: () => el.classList.add("is-in"),
+    }));
+
+    // everything else marked to reveal rises into place
     gsap.utils.toArray(".reveal").forEach((el) => {
       gsap.to(el, {
-        opacity: 1, y: 0, duration: 1.2, ease: "power3.out",
+        opacity: 1, y: 0, duration: 1.4, ease: "expo.out",
         scrollTrigger: { trigger: el, start: "top 86%" },
       });
     });
@@ -186,12 +311,56 @@
         scrollTrigger: { trigger: el.parentElement, start: "top bottom", end: "bottom top", scrub: true },
       });
     });
-    // staggered groups
+    // staggered groups (bottle cards tip up from below); transforms are handed back to CSS afterwards for the tilt
     gsap.utils.toArray("[data-stagger]").forEach((group) => {
-      gsap.from(group.children, {
-        y: 60, opacity: 0, duration: 1.1, stagger: 0.1, ease: "power3.out",
-        scrollTrigger: { trigger: group, start: "top 82%" },
+      const cards = group.classList.contains("bottles");
+      gsap.fromTo(group.children,
+        { y: cards ? 90 : 60, rotateX: cards ? 14 : 0, transformPerspective: 900, opacity: 0 },
+        {
+          y: 0, rotateX: 0, opacity: 1, duration: 1.3, ease: "expo.out", clearProps: "transform,opacity",
+          stagger: { each: 0.09, onComplete() { this.targets()[0].classList.add("is-in"); } },
+          scrollTrigger: { trigger: group, start: "top 84%" },
+        });
+    });
+
+    // the brand banner runs faster while the page is moving, then eases back
+    const track = document.querySelector(".marquee__track");
+    if (track) {
+      track.style.animation = "none";
+      const loop = gsap.to(track, { xPercent: -50, duration: 34, ease: "none", repeat: -1 });
+      let boost = 0;
+      ScrollTrigger.create({ onUpdate: (self) => { boost = Math.min(Math.abs(self.getVelocity()) / 400, 4); } });
+      gsap.ticker.add(() => {
+        boost *= 0.94;
+        const ts = loop.timeScale();
+        loop.timeScale(ts + (1 + boost - ts) * 0.08);
       });
+    }
+
+    // buttons lean toward the pointer
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      document.querySelectorAll(".btn").forEach((b) => {
+        const xTo = gsap.quickTo(b, "x", { duration: 0.6, ease: "expo.out" });
+        const yTo = gsap.quickTo(b, "y", { duration: 0.6, ease: "expo.out" });
+        b.addEventListener("pointermove", (e) => {
+          const r = b.getBoundingClientRect();
+          xTo((e.clientX - r.left - r.width / 2) * 0.16);
+          yTo((e.clientY - r.top - r.height / 2) * 0.3);
+        });
+        b.addEventListener("pointerleave", () => { xTo(0); yTo(0); });
+      });
+    }
+
+    // leaving the first screen: the words drift up and fade while the picture settles back
+    const hero = document.querySelector(".hero");
+    if (hero) {
+      const out = { trigger: hero, start: "top top", end: "bottom top", scrub: true };
+      gsap.to(".hero__copy", { yPercent: -16, opacity: 0.1, ease: "none", scrollTrigger: out });
+      gsap.to(".hero__scene", { scale: 1.06, ease: "none", scrollTrigger: { ...out } });
+    }
+    gsap.utils.toArray(".phero").forEach((ph) => {
+      const w = ph.querySelector(".wrap");
+      if (w) gsap.to(w, { yPercent: -24, opacity: 0.2, ease: "none", scrollTrigger: { trigger: ph, start: "top top", end: "bottom top", scrub: true } });
     });
     // floating range shot
     if (document.querySelector(".brands__range img")) {
