@@ -16,6 +16,7 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
+  <div class="atmos" aria-hidden="true"><i></i><i></i><i></i></div>
 
   <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
     <div class="gate__scene" aria-hidden="true">
@@ -61,7 +62,7 @@
 
   <main id="main">
     <!-- ===== Hero: the pour ===== -->
-    <section class="hero">
+    <section class="hero" data-tone="night">
       <div class="hero__stage">
         <canvas class="hero__dust" aria-hidden="true"></canvas>
 
@@ -98,11 +99,13 @@
     </div>
 
     <!-- ===== Our story ===== -->
-    <section class="section">
+    <section class="section" data-tone="night">
       <div class="wrap story">
-        <div class="story__media story__media--still story__media--square reveal">
-          <picture><source type="image/avif" srcset="assets/img/story-range.avif"><img width="1254" height="1254" loading="lazy" decoding="async" src="assets/img/story-range.jpg" alt="Finsbury Vodka, Don Rocket Tequila, Power Label Whisky and Cagura on a bar beside copper stills, under the Urban Sky sign"></picture>
+        <div class="story__fig">
           <div class="story__frame"></div>
+          <div class="story__media story__media--still story__media--square reveal">
+            <picture><source type="image/avif" srcset="assets/img/story-range.avif"><img width="1254" height="1254" loading="lazy" decoding="async" src="assets/img/story-range.jpg" alt="Finsbury Vodka, Don Rocket Tequila, Power Label Whisky and Cagura on a bar beside copper stills, under the Urban Sky sign"></picture>
+          </div>
         </div>
         <div class="story__copy">
           <span class="eyebrow reveal">Our Story</span>
@@ -121,11 +124,13 @@
     </section>
 
     <!-- ===== Authorised reseller: Finnland Distilleries ===== -->
-    <section class="section finn">
+    <section class="section finn" data-tone="leaf">
       <div class="wrap story story--flip">
-        <div class="story__media story__media--still reveal">
-          <picture><source type="image/avif" srcset="assets/img/finnland-range.avif"><img width="1122" height="1402" loading="lazy" decoding="async" src="assets/img/finnland-range.jpg" alt="The Finnland arrack range: Soora Arrack, Special Arrack, Green Apple Arrack and Best Value Special Arrack"></picture>
+        <div class="story__fig">
           <div class="story__frame"></div>
+          <div class="story__media story__media--still reveal">
+            <picture><source type="image/avif" srcset="assets/img/finnland-range.avif"><img width="1122" height="1402" loading="lazy" decoding="async" src="assets/img/finnland-range.jpg" alt="The Finnland arrack range: Soora Arrack, Special Arrack, Green Apple Arrack and Best Value Special Arrack"></picture>
+          </div>
         </div>
         <div class="story__copy">
           <span class="eyebrow reveal">Authorised reseller</span>
@@ -139,7 +144,7 @@
     </section>
 
     <!-- ===== Vision + mission ===== -->
-    <section class="section">
+    <section class="section" data-tone="wine">
       <div class="wrap">
         <div style="text-align:center;margin-bottom:clamp(50px,6vw,80px)">
           <span class="eyebrow reveal">What drives us</span>
@@ -163,7 +168,7 @@
     </section>
 
     <!-- ===== Brands ===== -->
-    <section class="section brands">
+    <section class="section brands" data-tone="cask">
       <div class="wrap">
         <div class="brands__head">
           <span class="eyebrow reveal">Our Brands</span>
@@ -181,7 +186,7 @@
     </section>
 
     <!-- ===== CTA ===== -->
-    <section class="section contact">
+    <section class="section contact" data-tone="dusk">
       <div class="contact__bg" data-parallax="8"></div>
       <div class="wrap cta">
         <span class="eyebrow reveal">Get in touch</span>

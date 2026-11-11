@@ -15,6 +15,7 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
+  <div class="atmos" aria-hidden="true"><i></i><i></i><i></i></div>
 
   <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
     <div class="gate__scene" aria-hidden="true">
@@ -59,7 +60,7 @@
   </header>
 
   <main id="main">
-    <section class="phero">
+    <section class="phero" data-tone="night">
       <div class="phero__img" style="background-image:url('assets/img/champagne-wide.jpg');background-image:image-set(url('assets/img/champagne-wide.avif') type('image/avif'), url('assets/img/champagne-wide.jpg') type('image/jpeg'))" data-parallax="8"></div>
       <div class="wrap">
         <span class="eyebrow" data-intro>About us</span>
@@ -67,11 +68,13 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" data-tone="night">
       <div class="wrap story">
-        <div class="story__media reveal">
-          <picture><source type="image/avif" srcset="assets/img/toast.avif"><img width="1200" height="800" loading="lazy" decoding="async" src="assets/img/toast.jpg" alt="Guests raising a toast" data-parallax="8"></picture>
+        <div class="story__fig">
           <div class="story__frame"></div>
+          <div class="story__media reveal">
+            <picture><source type="image/avif" srcset="assets/img/toast.avif"><img width="1200" height="800" loading="lazy" decoding="async" src="assets/img/toast.jpg" alt="Guests raising a toast" data-parallax="8"></picture>
+          </div>
         </div>
         <div class="story__copy">
           <span class="eyebrow reveal">Our Story</span>
@@ -84,7 +87,7 @@
       </div>
     </section>
 
-    <section class="band">
+    <section class="band" data-tone="cask">
       <div class="band__img" style="background-image:url('assets/img/cocktail-pour.jpg');background-image:image-set(url('assets/img/cocktail-pour.avif') type('image/avif'), url('assets/img/cocktail-pour.jpg') type('image/jpeg'))" data-parallax="10"></div>
       <div class="band__inner">
         <picture><source type="image/avif" srcset="assets/img/crest-mono.avif"><img width="394" height="440" loading="lazy" decoding="async" class="band__crest reveal" src="assets/img/crest-mono.png" alt=""></picture>
@@ -92,7 +95,7 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" data-tone="wine">
       <div class="wrap">
         <div class="vm" data-stagger>
           <article class="vm__card">
@@ -111,7 +114,7 @@
       </div>
     </section>
 
-    <section class="section contact">
+    <section class="section contact" data-tone="dusk">
       <div class="contact__bg" data-parallax="8"></div>
       <div class="wrap cta">
         <span class="eyebrow reveal">Partner with us</span>

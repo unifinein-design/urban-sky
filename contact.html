@@ -15,6 +15,7 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
+  <div class="atmos" aria-hidden="true"><i></i><i></i><i></i></div>
 
   <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
     <div class="gate__scene" aria-hidden="true">
@@ -59,7 +60,7 @@
   </header>
 
   <main id="main">
-    <section class="phero" style="height:70vh">
+    <section class="phero" style="height:70vh" data-tone="night">
       <div class="phero__img" style="background-image:url('assets/img/pour-bg.jpg');background-image:image-set(url('assets/img/pour-bg.avif') type('image/avif'), url('assets/img/pour-bg.jpg') type('image/jpeg'))" data-parallax="8"></div>
       <div class="wrap">
         <span class="eyebrow" data-intro>Contact us</span>
@@ -67,7 +68,7 @@
       </div>
     </section>
 
-    <section class="section contact" style="padding-top:clamp(40px,6vw,80px)">
+    <section class="section contact" data-tone="dusk" style="padding-top:clamp(40px,6vw,80px)">
       <div class="wrap contact__grid">
         <div>
           <p class="lead reveal">Discover the world of exceptional beverages with Urban Sky Holdings Pvt. Ltd, where quality meets passion. <span class="gold-text">Cheers!</span></p>

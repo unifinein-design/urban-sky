@@ -15,6 +15,7 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
+  <div class="atmos" aria-hidden="true"><i></i><i></i><i></i></div>
 
   <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
     <div class="gate__scene" aria-hidden="true">
@@ -59,7 +60,7 @@
   </header>
 
   <main id="main">
-    <section class="phero">
+    <section class="phero" data-tone="night">
       <div class="phero__img" style="background-image:url('assets/img/restaurant.jpg');background-image:image-set(url('assets/img/restaurant.avif') type('image/avif'), url('assets/img/restaurant.jpg') type('image/jpeg'))" data-parallax="8"></div>
       <div class="wrap">
         <span class="eyebrow" data-intro>Explore our brands</span>
@@ -67,7 +68,7 @@
       </div>
     </section>
 
-    <section class="section brands">
+    <section class="section brands" data-tone="cask">
       <div class="wrap">
         <div class="brands__head">
           <span class="eyebrow reveal">Featured house</span>
@@ -112,7 +113,7 @@
           </article>
         </div>
 
-        <div class="brands__head brands__sub" id="finnland">
+        <div class="brands__head brands__sub" id="finnland" data-tone="leaf">
           <span class="eyebrow reveal">Authorised reseller</span>
           <h2 class="sr-only">Finnland Distilleries</h2>
           <picture><source type="image/avif" srcset="assets/img/finnland-logo.avif"><img width="800" height="616" loading="lazy" decoding="async" class="brands__logo reveal" src="assets/img/finnland-logo.png" alt="Finnland Distilleries"></picture>
@@ -146,7 +147,7 @@
           </article>
         </div>
 
-        <div class="brands__head brands__sub">
+        <div class="brands__head brands__sub" data-tone="amber">
           <span class="eyebrow reveal">More from the collection</span>
           <h2 class="sr-only">More spirits</h2>
         </div>
@@ -175,7 +176,7 @@
       </div>
     </section>
 
-    <section class="band">
+    <section class="band" data-tone="cask">
       <div class="band__img" style="background-image:url('assets/img/cognac-cigar.jpg');background-image:image-set(url('assets/img/cognac-cigar.avif') type('image/avif'), url('assets/img/cognac-cigar.jpg') type('image/jpeg'))" data-parallax="10"></div>
       <div class="band__inner">
         <picture><source type="image/avif" srcset="assets/img/crest-mono.avif"><img width="394" height="440" loading="lazy" decoding="async" class="band__crest reveal" src="assets/img/crest-mono.png" alt=""></picture>
@@ -183,7 +184,7 @@
       </div>
     </section>
 
-    <section class="section contact">
+    <section class="section contact" data-tone="dusk">
       <div class="contact__bg" data-parallax="8"></div>
       <div class="wrap cta">
         <span class="eyebrow reveal">Trade enquiries</span>
