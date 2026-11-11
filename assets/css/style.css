@@ -491,6 +491,7 @@ picture { display: contents; }
 .story__stats span { font-size: 16.5px; color: #c9bea9; line-height: 1.55; display: block; margin-top: 8px; }
 /* a square photo (the range on the bar) keeps its whole frame */
 .story__media--square { aspect-ratio: 1 / 1; }
+.story__media--portrait { aspect-ratio: 3 / 4; }
 /* mirrored story: photo on the right, frame offset to the left */
 .story--flip { grid-template-columns: 1fr 1.05fr; }
 .story--flip .story__fig { order: 2; }
